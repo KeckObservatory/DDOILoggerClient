@@ -12,7 +12,6 @@ from configparser import ConfigParser
 conf = ConfigParser()
 conf.read(['setup.cfg'])
 metadata = dict(conf.items("metadata"))
-options = dict(conf.items("options"))
 
 NAME = 'ddoiloggerclient'
 VERSION = 'dev@0.0.1'
@@ -34,7 +33,7 @@ setup(name=NAME,
       version=VERSION,
       license=LICENSE,
       description=DESCRIPTION,
-      long_description=open('README.rst').read(),
+    #   long_description=open('README.rst').read(),
       author=AUTHOR,
       author_email=AUTHOR_EMAIL,
       packages=find_packages(),
