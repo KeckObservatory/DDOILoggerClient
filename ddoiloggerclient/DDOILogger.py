@@ -193,8 +193,12 @@ class ServerInterface():
         self.config = config
 
     def check_cfg_url_alive(self):
-        res = requests.get(self.config['url'] + self.config['heartbeat'])
-        return res.status_code == 200
+        try:
+            res = requests.get(self.config['url'] + self.config['heartbeat'])
+            return res.status_code == 200
+        except Exception as e:
+            print("Unable to connect to URL")
+            return False
 
     def _get_http(self, url):
         try:
