@@ -37,7 +37,8 @@ class DDOILogger():
         self.server_interface = ServerInterface(self.config)
 
         if not self.server_interface.check_cfg_url_alive():
-            raise Exception(f"Unable to access backend API at {self.config['url']}")
+            ex_str = "Unable to access backend API at " + self.config['url']
+            raise Exception(ex_str)
 
         # Initialize subsystems
         self.subsystems = [subsystem['identifier'] for subsystem in self.server_interface.get_meta_options('subsystems')]
@@ -131,7 +132,7 @@ class DDOILogger():
             'PROGID' : progid,
             'message' : message
         }
-        j = json.dump(log)
+        j = json.dumps(log)
         return j
     
     def _log_function_factory(self, level):
@@ -194,10 +195,13 @@ class ServerInterface():
 
     def check_cfg_url_alive(self):
         try:
+            print("trying to access:")
+            print(self.config['url'] + self.config['heartbeat'])
             res = requests.get(self.config['url'] + self.config['heartbeat'])
             return res.status_code == 200
         except Exception as e:
             print("Unable to connect to URL")
+            print(e)
             return False
 
     def _get_http(self, url):
