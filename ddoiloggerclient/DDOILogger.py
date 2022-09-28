@@ -60,8 +60,8 @@ class DDOILogger():
             setattr(self, level.lower(), self._log_function_factory(level))
 
         # Initialize "authorship" information
-        if subsystem is not None:
-            if subsystem not in self.subsystems:
+        if not subsystem is None:
+            if not subsystem in self.subsystems:
                 print(f"Entered an invalid system. Valid options are:")
                 for s in self.subsystems:
                     print(f"\t{s}")
@@ -69,19 +69,19 @@ class DDOILogger():
             else:
                 self.subsystem = subsystem
 
-        if author is not None:
+        if not author is None:
             self.author = str(author)
         else:
             print("No author specified. Author field will be blank")
             self.author = ""
         
-        if semid is not None:
+        if not semid is None:
             self.semid = str(semid)
         else:
             print("No SemID specified. SemID field will be blank")
             self.semid = ""
         
-        if progid is not None:
+        if not progid is None:
             self.progid = str(progid)
         else:
             print("No ProgID specified. ProgID field will be blank")
