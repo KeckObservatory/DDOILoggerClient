@@ -14,7 +14,7 @@ conf.read(['setup.cfg'])
 metadata = dict(conf.items("metadata"))
 
 NAME = 'ddoiloggerclient'
-VERSION = 'dev@0.0.1'
+VERSION = '1.0.0'
 RELEASE = 'dev' not in VERSION
 AUTHOR = metadata["author"]
 AUTHOR_EMAIL = metadata["author_email"]
@@ -37,7 +37,7 @@ setup(name=NAME,
       author=AUTHOR,
       author_email=AUTHOR_EMAIL,
       packages=find_packages(),
-      package_data={'ddoiloggerclient': ['configs/*.cfg']},
+      package_data={'ddoiloggerclient': ['configs/*.ini']},
       scripts=scripts,
       entry_points=entry_points,
       install_requires=[],

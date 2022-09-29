@@ -99,7 +99,8 @@ class DDOILogger():
 
         self.server_interface.send_log(message)
 
-    def _format_message(self, message, level, system=None, semid = None, progid = None):
+    @staticmethod
+    def _format_message(message, level, author=None, subsystem=None, semid = None, progid = None):
         """Formats a message into a json string for delivery to the backend
 
         Parameters
@@ -110,7 +111,7 @@ class DDOILogger():
             log level (e.g. info, warn, error, ...)
         author : str
             who authored this log
-        system : str, optional
+        subsystem : str, optional
             subsystem that this log came from. Should be grabbed from a class property, not manually entered. By default None
         semid : str, optional
             semester ID for the observering run that generated this log, by default None
@@ -124,16 +125,15 @@ class DDOILogger():
         """
         log = {
             'id' : 'UID',
-            'utc_sent' : datetime.utcnow(),
-            'subsystem' : system,
+            'utc_sent' : datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%Z'),
+            'subsystem' : subsystem,
             'level' : level,
-            'author' : self.author,
+            'author' : author,
             'SEMID' : semid,
             'PROGID' : progid,
             'message' : message
         }
-        j = json.dumps(log)
-        return j
+        return log
     
     def _log_function_factory(self, level):
         """Factory to create individual logging functions (e.g. "logger.info(...))
@@ -149,16 +149,11 @@ class DDOILogger():
             a logging function with a specific logging level set
         """
         
-        def f(self, message, subsystem=None, semid=None, progid=None,):
+        def f(message, subsystem=None, semid=None, progid=None,):
             
             if self.subsystem is not None:
                 # This means that this logger has been initialized with one subsystem
-                formatted_message = self._format_message(message,
-                                                         level.upper(),
-                                                         self.author,
-                                                         subsystem = self.subsystem,
-                                                         semid = semid,
-                                                         progid = progid)
+                formatted_message = self._format_message(message, level.upper(), self.author, subsystem=self.subsystem, semid=semid, progid=progid)
             else:
                 # This means that we need to check if a subsystem was passed in
                 if subsystem is None:
@@ -174,7 +169,7 @@ class DDOILogger():
                                                          semid = semid,
                                                          progid = progid)
                 
-            self.send_message(formatted_message)
+            self._send_message(formatted_message)
         
         return f
 
@@ -228,7 +223,7 @@ class ServerInterface():
     
     def _send_put(self, url, formdata):
         try:
-            res = requests.put(url, formdata)
+            res = requests.put(url, data=formdata)
             if res is None:
                 print(f"PUT to {url} received no response")
                 return False
@@ -258,9 +253,9 @@ class ServerInterface():
     def send_log(self, message):
         # Use send put to do the stuff
         # return something? idk what tho
-        response = self._send_put(self.config['url'] + self.config['new_log'])
+        response = self._send_put(self.config['url'] + self.config['new_log'], message)
 
-        if response:
-            print("Sucessfully submitted log")
-        else:
+        if not response:
             print("Log submission failed.")
+        # else:
+            # print("Sucessfully submitted log")
