@@ -4,6 +4,7 @@ import os
 import configparser
 import json
 import requests
+import zmq
 
 """Instantiable class for logging within the DDOI ecosystem
 """
@@ -34,7 +35,7 @@ class DDOILogger():
 
         self.config = config_parser['LOGGING_SERVER']
 
-        self.server_interface = ServerInterface(self.config)
+        self.server_interface = ServerInterface(self.config, subsystem)
 
         if not self.server_interface.check_cfg_url_alive():
             ex_str = "Unable to access backend API at " + self.config['url']
@@ -86,6 +87,7 @@ class DDOILogger():
         else:
             print("No ProgID specified. ProgID field will be blank")
             self.progid = ""
+
 
 
     def _send_message(self, message):
@@ -185,8 +187,22 @@ class DDOILogger():
 
 class ServerInterface():
 
-    def __init__(self, config):
+    def __init__(self, config, subsystem):
         self.config = config
+        self.subsystem = subsystem
+        # initialize zero mq client
+        self._init_zmq()
+
+
+    def _init_zmq(self):
+        context = zmq.Context()
+        self.socket = context.socket(zmq.DEALER)
+        identity = u'worker-%s' % self.subsystem
+        self.socket.identity = identity.encode('ascii')
+        self.socket.connect('tcp://localhost:5570')
+        print('Client %s started' % (identity))
+        poll = zmq.Poller()
+        poll.register(self.socket, zmq.POLLIN)
 
     def check_cfg_url_alive(self):
         try:
@@ -253,9 +269,12 @@ class ServerInterface():
     def send_log(self, message):
         # Use send put to do the stuff
         # return something? idk what tho
-        response = self._send_put(self.config['url'] + self.config['new_log'], message)
 
-        if not response:
-            print("Log submission failed.")
+
+        # response = self._send_put(self.config['url'] + self.config['new_log'], message) #  http is slow. 
+        self.socket.send_string(json.dumps(message)) #  zeromq method is faster
+
+        # if not response:
+        #     print("Log submission failed.")
         # else:
             # print("Sucessfully submitted log")
