@@ -5,6 +5,7 @@ import configparser
 import json
 import requests
 import zmq
+import pdb
 
 """Instantiable class for logging within the DDOI ecosystem
 """
@@ -42,17 +43,18 @@ class DDOILogger():
             raise Exception(ex_str)
 
         # Initialize subsystems
-        self.subsystems = [subsystem['identifier'] for subsystem in self.server_interface.get_meta_options('subsystems')]
+        metadata = self.server_interface.get_meta_options()
+        metadata = json.loads(metadata)
+        subsystems = metadata.get('subsystems', [])
+        levels = metadata.get('levels', [])
+        self.subsystems = [subsystem['identifier'] for subsystem in subsystems]
 
         for sub in self.subsystems:
-            print(sub)
             setattr(self, sub, sub)
         
         # Initialize event types
-        self.levels = [level['level'] for level in self.server_interface.get_meta_options('levels')]
-        
+        self.levels = levels
         for level in self.levels:
-            print(level)
             setattr(self, level, level)
 
         # Initialize logging levels (e.g. info, debug, warn, ...)
@@ -98,8 +100,8 @@ class DDOILogger():
         message : str
             a JSON formatted string containing the information the backend expects
         """
-
-        self.server_interface.send_log(message)
+        resp = self.server_interface.send_log(message)
+        return resp
 
     @staticmethod
     def _format_message(message, level, author=None, subsystem=None, semid = None, progid = None):
@@ -171,7 +173,7 @@ class DDOILogger():
                                                          semid = semid,
                                                          progid = progid)
                 
-            self._send_message(formatted_message)
+            resp = self._send_message(formatted_message)
         
         return f
 
@@ -187,12 +189,12 @@ class DDOILogger():
 
 class ServerInterface():
 
-    def __init__(self, config, subsystem):
+    def __init__(self, config, subsystem, poll_timeout=1000):
+        self.poll_timeout = poll_timeout 
         self.config = config
         self.subsystem = subsystem
         # initialize zero mq client
         self._init_zmq()
-
 
     def _init_zmq(self):
         context = zmq.Context()
@@ -201,80 +203,36 @@ class ServerInterface():
         self.socket.identity = identity.encode('ascii')
         self.socket.connect('tcp://localhost:5570')
         print('Client %s started' % (identity))
-        poll = zmq.Poller()
-        poll.register(self.socket, zmq.POLLIN)
+        self.poll = zmq.Poller()
+        self.poll.register(self.socket, zmq.POLLIN)
 
     def check_cfg_url_alive(self):
         try:
-            print("trying to access:")
-            print(self.config['url'] + self.config['heartbeat'])
-            res = requests.get(self.config['url'] + self.config['heartbeat'])
-            return res.status_code == 200
-        except Exception as e:
+            print("trying to access server:")
+            msg = {'msg_type': 'heartbeat', 'body': None }
+            self.socket.send_string(json.dumps(msg)) #  zeromq method is faster
+            sockets = dict(self.poll.poll(self.poll_timeout))
+            resp = self.socket.recv() if self.socket in sockets else {}
+            resp = json.loads(resp)
+            return resp.get('resp', None) == 200
+        except Exception as err:
             print("Unable to connect to URL")
-            print(e)
+            print(err)
             return False
 
-    def _get_http(self, url):
-        try:
-            res = requests.get(url)
-            if res is None:
-                print(f"GET to {url} received no response")
-                return False
-            else:
-                if res.status_code == 200:
-                    try:
-                        data = res.json()
-                        return data
-                    except requests.exceptions.JSONDecodeError as e:
-                        print(f"Recieved no JSON decodable from GET to {url}")
-                        print(e)
-                else:
-                    print(f"Received a non 200 response: {res.status_code}")
-                    return False
-        except requests.exceptions.RequestException as e:
-            print(f"Failed to access {url}")
-            print(e)
-            return False
-    
-    def _send_put(self, url, formdata):
-        try:
-            res = requests.put(url, data=formdata)
-            if res is None:
-                print(f"PUT to {url} received no response")
-                return False
-            else:
-                if res.status_code == 201:
-                    return True
-                else:
-                    print(f"Received a non 200 response: {res.status_code}")
-                    return False
-        except requests.exceptions.RequestException as e:
-            print(f"Failed to access {url}")
-            print(e)
-            return False
-
-    def get_meta_options(self, type):
-        try:
-            data = self._get_http(self.config['url'] + self.config[type])
-
-            if not data:
-                print(f"Failed to access valid {type}")
-                return
-            else:
-                return data
-        except KeyError as e:
-            print(f"Failed to find '{type}' in the config")
-    
+    def get_meta_options(self):
+        msg = {'msg_type': 'request_metadata_options', 'body': None}
+        self.socket.send_string(json.dumps(msg)) #  zeromq method is faster
+        sockets = dict(self.poll.poll(self.poll_timeout))
+        resp = self.socket.recv() if self.socket in sockets else {}
+        return resp
+        
     def send_log(self, message):
-        # Use send put to do the stuff
-        # return something? idk what tho
+        msg = {'msg_type': 'log', 'body': message}
+        self.socket.send_string(json.dumps(msg))
+        # sockets = dict(self.poll.poll(1000))
+        # if self.socket in sockets:
+        #     resp = self.socket.recv()
+        #     return resp
 
 
-        # response = self._send_put(self.config['url'] + self.config['new_log'], message) #  http is slow. 
-        self.socket.send_string(json.dumps(message)) #  zeromq method is faster
-
-        # if not response:
-        #     print("Log submission failed.")
-        # else:
-            # print("Sucessfully submitted log")
