@@ -180,7 +180,6 @@ class DDOILogger():
     def _get_default_config_loc(self):
         config_loc = os.path.abspath(os.path.dirname(__file__))
         config_loc = os.path.join(config_loc, './configs/logger_cfg.ini')
-        
         return config_loc
 
     ###
@@ -201,7 +200,7 @@ class ServerInterface():
         self.socket = context.socket(zmq.DEALER)
         identity = u'worker-%s' % self.subsystem
         self.socket.identity = identity.encode('ascii')
-        self.socket.connect('tcp://localhost:5570')
+        self.socket.connect(self.config['url'])
         print('Client %s started' % (identity))
         self.poll = zmq.Poller()
         self.poll.register(self.socket, zmq.POLLIN)
