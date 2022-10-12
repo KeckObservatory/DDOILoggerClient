@@ -247,9 +247,5 @@ class ServerInterface():
         """
         msg = {'msg_type': 'log', 'body': body}
         self.socket.send_string(json.dumps(msg))
-        sockets = dict(self.poll.poll(1000))
-        if self.socket in sockets:
-            resp = self.socket.recv()
-            return resp
-
+        return b'{}'
 
