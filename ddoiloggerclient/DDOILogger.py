@@ -38,13 +38,12 @@ class DDOILogger():
 
         self.server_interface = ServerInterface(self.config, subsystem)
 
-        if not self.server_interface.check_cfg_url_alive():
+        if not self.server_interface._check_cfg_url_alive():
             ex_str = "Unable to access backend API at " + self.config['url']
             raise Exception(ex_str)
 
         # Initialize subsystems
-        metadata = self.server_interface.get_meta_options()
-        metadata = json.loads(metadata)
+        metadata = self.server_interface._get_meta_options()
         subsystems = metadata.get('subsystems', [])
         levels = metadata.get('levels', [])
         self.subsystems = [subsystem['identifier'] for subsystem in subsystems]
@@ -100,12 +99,12 @@ class DDOILogger():
         message : str
             a JSON formatted string containing the information the backend expects
         """
-        resp = self.server_interface.send_log(message)
+        resp = json.loads(self.server_interface._send_log(message))
         return resp
 
     @staticmethod
     def _format_message(message, level, author=None, subsystem=None, semid = None, progid = None):
-        """Formats a message into a json string for delivery to the backend
+        """Formats a message into a dict for delivery to the backend
 
         Parameters
         ----------
@@ -124,8 +123,8 @@ class DDOILogger():
 
         Returns
         -------
-        str
-            a JSON formatted string containing the log message and metadata, formatted for submisison to the logging backend
+        Dict 
+            a Dict containing the log message and metadata, formatted for submisison to the logging backend
         """
         log = {
             'id' : 'UID',
@@ -155,7 +154,7 @@ class DDOILogger():
         
         def f(message, subsystem=None, semid=None, progid=None,):
             
-            if self.subsystem is not None:
+            if not self.subsystem is None:
                 # This means that this logger has been initialized with one subsystem
                 formatted_message = self._format_message(message, level.upper(), self.author, subsystem=self.subsystem, semid=semid, progid=progid)
             else:
@@ -174,6 +173,7 @@ class DDOILogger():
                                                          progid = progid)
                 
             resp = self._send_message(formatted_message)
+            return resp
         
         return f
 
@@ -182,11 +182,9 @@ class DDOILogger():
         config_loc = os.path.join(config_loc, './configs/logger_cfg.ini')
         return config_loc
 
-    ###
-    # HTTP Handler
-    ###
-
 class ServerInterface():
+    """ZeroMQ client that interfaces with the server
+    """
 
     def __init__(self, config, subsystem, poll_timeout=1000):
         self.poll_timeout = poll_timeout 
@@ -205,7 +203,12 @@ class ServerInterface():
         self.poll = zmq.Poller()
         self.poll.register(self.socket, zmq.POLLIN)
 
-    def check_cfg_url_alive(self):
+    def _check_cfg_url_alive(self):
+        """Sends a heartbeat message to server and checks that message returns
+
+        Returns:
+            boolean : If True then message was recieved, otherwise False
+        """
         try:
             print("trying to access server:")
             msg = {'msg_type': 'heartbeat', 'body': None }
@@ -219,19 +222,34 @@ class ServerInterface():
             print(err)
             return False
 
-    def get_meta_options(self):
+    def _get_meta_options(self):
+        """Sends a request for metadata
+
+        Returns:
+            dict: contains a list of valid subsystems and log levels 
+        """
         msg = {'msg_type': 'request_metadata_options', 'body': None}
         self.socket.send_string(json.dumps(msg)) #  zeromq method is faster
         sockets = dict(self.poll.poll(self.poll_timeout))
-        resp = self.socket.recv() if self.socket in sockets else {}
-        return resp
+        resp = json.loads(self.socket.recv()) if self.socket in sockets else {}
+        assert resp.get('resp', False) == 200, "metadata options not recieved: {resp.get('msg', 'no msg found')}"
+        metadata = resp.get('msg')
+        return metadata 
         
-    def send_log(self, message):
-        msg = {'msg_type': 'log', 'body': message}
+    def _send_log(self, body):
+        """Sends a log request message to the server
+
+        Args:
+            body (dict): the log message body that is to be sent to the server
+
+        Returns:
+            dict: an acknowledgment message from the server
+        """
+        msg = {'msg_type': 'log', 'body': body}
         self.socket.send_string(json.dumps(msg))
-        # sockets = dict(self.poll.poll(1000))
-        # if self.socket in sockets:
-        #     resp = self.socket.recv()
-        #     return resp
+        sockets = dict(self.poll.poll(1000))
+        if self.socket in sockets:
+            resp = self.socket.recv()
+            return resp
 
 
