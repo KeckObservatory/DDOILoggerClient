@@ -7,6 +7,9 @@ import requests
 import zmq
 import pdb
 
+
+        
+
 """Instantiable class for logging within the DDOI ecosystem
 """
 class DDOILogger():
@@ -89,17 +92,18 @@ class DDOILogger():
             print("No ProgID specified. ProgID field will be blank")
             self.progid = ""
 
-
-
-    def _send_message(self, message):
+    def _send_message(self, message, sendAck=True):
         """Sends a log to the url designated in the config
 
         Parameters
         ----------
         message : str
             a JSON formatted string containing the information the backend expects
+        sendAck : (bool)
+            set to true to enable recieving an acknoledgement. 
+            note that it takes much longer for the ack to arrive.
         """
-        resp = json.loads(self.server_interface._send_log(message))
+        resp = json.loads(self.server_interface._send_log(message, sendAck))
         return resp
 
     @staticmethod
@@ -152,7 +156,7 @@ class DDOILogger():
             a logging function with a specific logging level set
         """
         
-        def f(message, subsystem=None, semid=None, progid=None,):
+        def f(message, subsystem=None, semid=None, progid=None, sendAck=True):
             
             if not self.subsystem is None:
                 # This means that this logger has been initialized with one subsystem
@@ -172,7 +176,7 @@ class DDOILogger():
                                                          semid = semid,
                                                          progid = progid)
                 
-            resp = self._send_message(formatted_message)
+            resp = self._send_message(formatted_message, sendAck)
             return resp
         
         return f
@@ -181,6 +185,41 @@ class DDOILogger():
         config_loc = os.path.abspath(os.path.dirname(__file__))
         config_loc = os.path.join(config_loc, './configs/logger_cfg.ini')
         return config_loc
+
+    @staticmethod
+    def handle_response(resp, log, path='./failedLogs.txt'):
+        """sends failed logs to local storage to be ingested later 
+
+        Parameters
+        ----------
+        resp : dict 
+            response from logger server 
+        log : dict 
+            the msg sent to the logger server 
+        path : str
+            path to write log files
+        """
+        try: 
+            if not resp.get('resp', None) == 200:
+                with open(path, 'a') as f:
+                    msgResp = {'resp': resp, 'log': log}
+                    msgRespStr = json.dumps(msgResp) + ',\r\n'
+                    f.write(msgRespStr)
+        except Exception as err:
+            print(f'handle_response error: {err}')
+    
+    @staticmethod
+    def read_failed_logs(path='./failedLogs.txt'):
+        """read from a text file of failed logs
+
+        Args:
+            path (str, optional): path to write log files. Defaults to './failedLogs'.
+
+        Returns:
+            list: a list of the failed logs 
+        """
+        return [json.loads(i) for i in open(path,'r').readlines()]
+
 
 class ServerInterface():
     """ZeroMQ client that interfaces with the server
@@ -236,16 +275,23 @@ class ServerInterface():
         metadata = resp.get('msg')
         return metadata 
         
-    def _send_log(self, body):
+    def _send_log(self, body, sendAck=True):
         """Sends a log request message to the server
 
         Args:
             body (dict): the log message body that is to be sent to the server
+            sendAck (bool): set to true to enable recieving an acknoledgement. 
+            note that it takes much longer for the ack to arrive.
 
         Returns:
             dict: an acknowledgment message from the server
         """
         msg = {'msg_type': 'log', 'body': body}
         self.socket.send_string(json.dumps(msg))
-        return b'{}'
-
+        if sendAck:
+            sockets = dict(self.poll.poll(1000))
+            if self.socket in sockets:
+                resp = self.socket.recv()
+                return resp
+        else:
+            return b"{}"
