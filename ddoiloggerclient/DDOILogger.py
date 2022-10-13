@@ -203,7 +203,7 @@ class DDOILogger():
             if not resp.get('resp', None) == 200:
                 with open(path, 'a') as f:
                     msgResp = {'resp': resp, 'log': log}
-                    msgRespStr = json.dumps(msgResp) + ',\r\n'
+                    msgRespStr = json.dumps(msgResp) + '\r'
                     f.write(msgRespStr)
         except Exception as err:
             print(f'handle_response error: {err}')
@@ -218,6 +218,8 @@ class DDOILogger():
         Returns:
             list: a list of the failed logs 
         """
+        if not os.path.exists(path):
+            return []
         return [json.loads(i) for i in open(path,'r').readlines()]
 
 
