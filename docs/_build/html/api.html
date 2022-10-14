@@ -90,20 +90,24 @@ or not.</p>
 <code class="docutils literal notranslate"><span class="pre">./configs/server_cfg.ini</span></code>.
 Messages sent to the server are sent as serialized
 JSON objects with the following schema:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">{msg_type: &quot;log&quot; || &quot;heartbeat&quot; || &quot;request_metadata_options&quot;,</span>
-<span class="go">&quot;body&quot;: dict || None}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;msg_type&quot;</span><span class="p">:</span> <span class="n">enumerable</span> <span class="s2">&quot;log&quot;</span> <span class="ow">or</span> <span class="s2">&quot;heartbeat&quot;</span> <span class="ow">or</span> <span class="s2">&quot;request_metadata_options&quot;</span><span class="p">,</span>
+<span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="nb">dict</span> <span class="ow">or</span> <span class="kc">None</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>in the case of msg_type: <code class="docutils literal notranslate"><span class="pre">log</span></code>
 The log body is written out as</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">{id: string,</span>
-<span class="go">utc_sent: date string formatted as YYYY-MM-DD HH:MM:SS.ZZ</span>
-<span class="go">subsystem: string</span>
-<span class="go">level: string, either debug, info, warn, or err</span>
-<span class="go">author: string</span>
-<span class="go">SEMID: string</span>
-<span class="go">PROGID: string</span>
-<span class="go">message: string}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+<span class="s2">&quot;utc_sent&quot;</span><span class="p">:</span> <span class="n">date</span> <span class="n">string</span> <span class="n">formatted</span> <span class="k">as</span> <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">HH</span><span class="p">:</span><span class="n">MM</span><span class="p">:</span><span class="n">SS</span><span class="o">.</span><span class="n">ZZ</span><span class="p">,</span>
+<span class="s2">&quot;subsystem&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+<span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">enumerable</span> <span class="s2">&quot;debug&quot;</span> <span class="ow">or</span> <span class="s2">&quot;info&quot;</span> <span class="ow">or</span> <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="ow">or</span> <span class="s2">&quot;err&quot;</span><span class="p">,</span>
+<span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+<span class="s2">&quot;SEMID&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+<span class="s2">&quot;PROGID&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+<span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>For each message the sever returns an acknowledgment message with the following schema:

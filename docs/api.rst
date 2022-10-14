@@ -26,24 +26,28 @@ The server depends on the configuration file located at
 Messages sent to the server are sent as serialized 
 JSON objects with the following schema:
 
-.. code-block:: console 
+.. code-block:: python
 
-    {msg_type: "log" || "heartbeat" || "request_metadata_options",
-    "body": dict || None}
+    {
+    "msg_type": enumerable "log" or "heartbeat" or "request_metadata_options",
+    "body": dict or None
+    }
 
 in the case of msg_type: ``log``
 The log body is written out as 
 
-.. code-block:: console 
+.. code-block:: python
 
-    {id: string,
-    utc_sent: date string formatted as YYYY-MM-DD HH:MM:SS.ZZ
-    subsystem: string
-    level: string, either debug, info, warn, or err
-    author: string
-    SEMID: string
-    PROGID: string
-    message: string}
+    {
+    "id": string,
+    "utc_sent": date string formatted as YYYY-MM-DD HH:MM:SS.ZZ,
+    "subsystem": string,
+    "level": enumerable "debug" or "info" or "warn", or "err",
+    "author": string,
+    "SEMID": string,
+    "PROGID": string,
+    "message": string,
+    }
 
 
 For each message the sever returns an acknowledgment message with the following schema:
