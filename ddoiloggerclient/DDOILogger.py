@@ -13,7 +13,9 @@ import pdb
 """Instantiable class for logging within the DDOI ecosystem
 """
 class DDOILogger():
-
+    """Module that is used to log DDOI messages.
+    
+    """
     def __init__(self, subsystem=None, config=None, author=None, progid=None, semid=None):
         """Constructor function for the DDOI logger
 
@@ -212,10 +214,12 @@ class DDOILogger():
     def read_failed_logs(path='./failedLogs.txt'):
         """read from a text file of failed logs
 
-        Args:
-            path (str, optional): path to write log files. Defaults to './failedLogs'.
-
-        Returns:
+        Parameters
+        ----------
+        path : str, optional
+            path to write log files. Defaults to './failedLogs'.
+        Returns
+        -------
             list: a list of the failed logs 
         """
         if not os.path.exists(path):
@@ -247,7 +251,8 @@ class ServerInterface():
     def _check_cfg_url_alive(self):
         """Sends a heartbeat message to server and checks that message returns
 
-        Returns:
+        Returns
+        -------
             boolean : If True then message was recieved, otherwise False
         """
         try:
@@ -266,7 +271,8 @@ class ServerInterface():
     def _get_meta_options(self):
         """Sends a request for metadata
 
-        Returns:
+        Returns
+        ------- 
             dict: contains a list of valid subsystems and log levels 
         """
         msg = {'msg_type': 'request_metadata_options', 'body': None}
@@ -280,12 +286,14 @@ class ServerInterface():
     def _send_log(self, body, sendAck=True):
         """Sends a log request message to the server
 
-        Args:
+        Parameters
+        ---------- 
             body (dict): the log message body that is to be sent to the server
             sendAck (bool): set to true to enable recieving an acknoledgement. 
             note that it takes much longer for the ack to arrive.
 
-        Returns:
+        Returns
+        -------
             dict: an acknowledgment message from the server
         """
         msg = {'msg_type': 'log', 'body': body}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Build &mdash; DDOILoggerClient 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="ddoiloggerclient package" href="ddoiloggerclient.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DDOILoggerClient
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">DDOILoggerClient</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Client Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#server-deployment">Server Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#deployment">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DDOILoggerClient</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Client Build</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/build.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="client-build">
+<h1>Client Build<a class="headerlink" href="#client-build" title="Permalink to this headline"></a></h1>
+<p>The DDOILoggerClient Python module is found on Github.
+It is installed by first cloning the repository to the
+server where it is to be run. Then the module is installed
+with the pip command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> while in the
+DDOILoggerClient directory. This installs the client
+to the current working python’s pip wheel. The logger
+client is imported and run just as any Python module.
+See the code below for an example client.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ddoiloggerclient</span> <span class="kn">import</span> <span class="n">DDOILoggerClient</span>
+
+<span class="n">subsystem</span><span class="o">=</span><span class="s2">&quot;MOSFIRE&quot;</span>
+<span class="n">config</span><span class="o">=</span><span class="kc">None</span>
+<span class="n">author</span><span class="o">=</span><span class="s2">&quot;authorNameHere&quot;</span>
+<span class="n">progid</span><span class="o">=</span><span class="s2">&quot;AProgid&quot;</span>
+<span class="n">semid</span><span class="o">=</span><span class="s2">&quot;Asemid&quot;</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">DDOILogger</span><span class="o">.</span><span class="n">DDOILogger</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">progid</span><span class="p">,</span> <span class="n">semid</span><span class="p">)</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;an example message&quot;</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Logger has levels: debug, info, warn, and error.
+Note that it is assumed that the client is on the same local
+network as the server.
+The Upon creation, the client sends a heartbeat
+message to the server, checking that it is alive.
+If it is not, the logger returns an error. The logger
+then requests valid subsystems and log levels. The
+logger looks for the server running on port 5570,
+or whatever is written in the configuration file located
+at <code class="docutils literal notranslate"><span class="pre">./configs/logger_cfg.ini.</span></code></p>
+</div>
+<div class="section" id="server-deployment">
+<h1>Server Deployment<a class="headerlink" href="#server-deployment" title="Permalink to this headline"></a></h1>
+<p>The server depends on the configuration file located at
+./configs/server_cfg.ini. This describes the host address,
+port number, and number of workers. Server is deployed by
+first installing the libraries written in <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>
+file with the pip command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda activate logger &amp;&amp; pip -e requirements.txt</span>
+</pre></div>
+</div>
+<p>The server running on vm-ddoiloggerbuild-new uses the <code class="docutils literal notranslate"><span class="pre">logger</span></code>
+virtual environment.</p>
+</div>
+<div class="section" id="deployment">
+<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline"></a></h1>
+<p>The Server that spawns and runs the workers runs as a daemon
+using the Linux process manager Systemd. Scripts are run as
+daemons and restarted should they unexpectedly exit.
+Systemd configuration files are stored
+in <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/zmq_server.service</span></code>, shown below.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
+<span class="go">Description=ZMQ Logger Server</span>
+<span class="go">After=multi-user.target</span>
+
+<span class="go">[Service]</span>
+<span class="go">Type=simple</span>
+<span class="go">Restart=always</span>
+<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python /home/dsieng/DDOILoggerServer/zmq_server.py</span>
+
+<span class="go">[Install]</span>
+<span class="go">WantedBy=multi-user.target</span>
+</pre></div>
+</div>
+<p>You can start, stop, and check the status of the daemon with the command
+<code class="docutils literal notranslate"><span class="pre">systemd</span> <span class="pre">start/stop/status</span> <span class="pre">zmq_server</span></code>
+Note how the service uses a Conda environment to run a python instance.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ddoiloggerclient.html" class="btn btn-neutral float-left" title="ddoiloggerclient package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Tyler Tucker.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
