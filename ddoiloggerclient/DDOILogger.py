@@ -7,9 +7,6 @@ import requests
 import zmq
 import pdb
 
-
-        
-
 """Instantiable class for logging within the DDOI ecosystem
 """
 class DDOILogger():
@@ -203,7 +200,8 @@ class DDOILogger():
         """
         try: 
             if not resp.get('resp', None) == 200:
-                with open(path, 'a') as f:
+                    
+                with open(path, 'a+') as f:
                     msgResp = {'resp': resp, 'log': log}
                     msgRespStr = json.dumps(msgResp) + '\r'
                     f.write(msgRespStr)
