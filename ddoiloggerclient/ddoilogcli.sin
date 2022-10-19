@@ -47,17 +47,17 @@ def get_default_config_loc():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Get logs from logger database")
-    parser.add_arguement('--subsystem', type=str, required=False, default=None,
+    parser.add_argument('--subsystem', type=str, required=False, default=None,
                          help="subsystem specific logs")
-    parser.add_arguement('--startDate', type=str, required=False, default=None,
+    parser.add_argument('--startDate', type=str, required=False, default=None,
                          help="starting date to retrieve logs")
-    parser.add_arguement('--endDate', type=str, required=False, default=None,
+    parser.add_argument('--endDate', type=str, required=False, default=None,
                          help="ending date to retrieve logs")
-    parser.add_arguement('--nLogs', type=int, required=False, default=100,
+    parser.add_argument('--nLogs', type=int, required=False, default=100,
                          help="maximum number of logs to output")
-    parser.add_arguement('--minutes', type=int, required=False, default=10,
+    parser.add_argument('--minutes', type=int, required=False, default=10,
                          help="set to retrieve last n minutes of logs")
-    parser.add_arguement('--dateFormat', type=str, required=False, default='%Y-%m-%dT%H:%M:%S',
+    parser.add_argument('--dateFormat', type=str, required=False, default='%Y-%m-%dT%H:%M:%S',
                          help="how the dates are formatted (default is YYYY-mm-ddTHH:MM:SS)")
 
     config = get_default_config_loc()
