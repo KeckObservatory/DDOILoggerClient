@@ -7,11 +7,6 @@ import requests
 import os
 import configparser
 
-sDate = '2022-10-10'
-eDate = '2022-10-19'
-subsystem = 'MOSFIRE'
-nLogs = 2
-
 def get_logs(baseURL, subsystem=None, startDate=None, endDate=None, nLogs=None, dateFormat=None):
     url = baseURL
     if startDate:
