@@ -1,5 +1,5 @@
 #! @PYTHON3@
-
+import pdb
 import argparse 
 import sys
 from datetime import datetime, timedelta
@@ -24,7 +24,7 @@ def get_logs(baseURL, subsystem=None, startDate=None, endDate=None, nLogs=None, 
         url += f'n_logs={nLogs}&'
     if dateFormat:
         url += f'date_format={dateFormat}'
-    return url
+    return url 
 
 
 def get_last_n_minutes_logs(baseURL, subsystem, minutes, endDate=None):
@@ -43,7 +43,31 @@ def get_last_n_minutes_logs(baseURL, subsystem, minutes, endDate=None):
     
 def get_default_config_loc():
     config_loc = os.path.abspath(os.path.dirname(__file__))
-    config_loc = os.path.join(config_loc, './configs/server_cfg.ini')
+    config_loc = os.path.join(config_loc, './logger_cfg.ini')
+    return config_loc
+
+def print_ouput_json_table(logs):
+    excl = ['_id', 'utc_sent' ]
+    keys = ([x for x in logs[0].keys() if x not in excl])
+    print(', '.join(keys))
+    for log in logs:
+        # print(log.values())
+        row = []
+        for key, val in log.items():
+            if key in excl: continue
+            if key == 'utc_received':
+                val = [x for x in val.values()][0]
+                row.append(val)
+                continue
+            if isinstance(val, dict):
+                row.append(str(val))
+                continue
+            if isinstance(val, str):
+                row.append(val)
+                continue
+        print(", ".join(row))
+                
+        # print(', '.join([str(x) for x in log.values()]))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Get logs from logger database")
@@ -55,7 +79,7 @@ if __name__ == '__main__':
                          help="ending date to retrieve logs")
     parser.add_argument('--nLogs', type=int, required=False, default=100,
                          help="maximum number of logs to output")
-    parser.add_argument('--minutes', type=int, required=False, default=10,
+    parser.add_argument('--minutes', type=int, required=False, default=None,
                          help="set to retrieve last n minutes of logs")
     parser.add_argument('--dateFormat', type=str, required=False, default='%Y-%m-%dT%H:%M:%S',
                          help="how the dates are formatted (default is YYYY-mm-ddTHH:MM:SS)")
@@ -63,16 +87,17 @@ if __name__ == '__main__':
     config = get_default_config_loc()
     config_parser = configparser.ConfigParser()
     config_parser.read(config)
-    config = config_parser['LOGGING_SERVER']
-
-    url = config.get('url',  'http://localhost:5000/api/log/get_logs?')
-
+    config = config_parser['HTTP_LOGGING_SERVER']
+    baseurl = config.get('url',  'http://localhost:5000/api/log/get_logs?')
     args = parser.parse_args()
 
     if args.minutes:
-        resp = get_last_n_minutes_logs(url, args.subsystem, args.minutes, args.endDate)
+        resp = get_last_n_minutes_logs(baseurl, args.subsystem, args.minutes, args.endDate)
         print(resp.json())
         sys.exit()
     else:
-        resp = get_logs(baseURL, subsystem=args.subsystem, startDate=args.startDate, endDate=args.endDate, nLogs=args.nLogs, dateFormat=args.dateFormat)
+        url = get_logs(baseurl, subsystem=args.subsystem, startDate=args.startDate, endDate=args.endDate, nLogs=args.nLogs, dateFormat=args.dateFormat)
+        resp = requests.get(url)
+        print(url)
+        print_ouput_json_table(resp.json())
         

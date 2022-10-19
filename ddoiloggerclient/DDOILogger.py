@@ -36,7 +36,7 @@ class DDOILogger():
         config_parser = configparser.ConfigParser()
         config_parser.read(config)
 
-        self.config = config_parser['LOGGING_SERVER']
+        self.config = config_parser['ZMQ_LOGGING_SERVER']
 
         self.server_interface = ServerInterface(self.config, subsystem)
 
@@ -182,7 +182,7 @@ class DDOILogger():
 
     def _get_default_config_loc(self):
         config_loc = os.path.abspath(os.path.dirname(__file__))
-        config_loc = os.path.join(config_loc, './configs/logger_cfg.ini')
+        config_loc = os.path.join(config_loc, './logger_cfg.ini')
         return config_loc
 
     @staticmethod
