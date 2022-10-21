@@ -36,8 +36,11 @@ def get_last_n_minutes_logs(baseURL, subsystem, minutes, endDate=None):
     print(url)
     return resp
     
-def get_default_config_loc():
+def get_default_config_loc(kroot=False):
     config_loc = os.path.abspath(os.path.dirname(__file__))
+    if kroot: 
+        config_loc = '/kroot/rel/default/data/'
+
     config_loc = os.path.join(config_loc, './logger_cfg.ini')
     return config_loc
 
@@ -78,6 +81,8 @@ if __name__ == '__main__':
                          help="set to retrieve last n minutes of logs")
     parser.add_argument('--dateFormat', type=str, required=False, default='%Y-%m-%dT%H:%M:%S',
                          help="how the dates are formatted (default is YYYY-mm-ddTHH:MM:SS)")
+    parser.add_argument('--kroot', type=bool, required=False, default=False,
+                         help="Is this a KROOT run project?")
 
     config = get_default_config_loc()
     config_parser = configparser.ConfigParser()
