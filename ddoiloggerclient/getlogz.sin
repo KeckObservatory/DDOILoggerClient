@@ -124,7 +124,5 @@ if __name__ == '__main__':
     resp = json.loads(socket.recv()) if socket in sockets else {}
     assert resp.get('resp', False) == 200, f"logs not recieved: {resp.get('msg', 'no msg found')}"
     logs = resp.get('msg')
-
-    pdb.set_trace()
     print_ouput_json_table(logs)
     sys.exit()
