@@ -47,7 +47,7 @@ def get_default_config_loc(dev=False):
 def print_ouput_json_table(logs):
     excl = [ 'utc_sent' ]
     keys = ([x for x in logs[0].keys() if x not in excl])
-    print(', '.join(keys))
+    print('\t '.join(keys))
     for log in logs:
         row = []
         for key, val in log.items():
@@ -58,7 +58,7 @@ def print_ouput_json_table(logs):
             if isinstance(val, str):
                 row.append(val)
                 continue
-        print(", ".join(row))
+        print("\t ".join(row))
                 
         # print(', '.join([str(x) for x in log.values()]))
 
@@ -103,7 +103,6 @@ if __name__ == '__main__':
     dev = args.dev
 
     config_loc = get_default_config_loc(dev)
-    print(config_loc)
     config_parser = configparser.ConfigParser()
     config_parser.read(config_loc)
     server = 'ZMQ_LOGGING_SERVER' if not dev else 'LOCAL_ZMQ_LOGGING_SERVER'
