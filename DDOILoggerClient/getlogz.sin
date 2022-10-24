@@ -55,6 +55,8 @@ def print_ouput_json_table(logs):
             if isinstance(val, dict):
                 row.append(str(val))
                 continue
+            if not val:
+                row.append('NA')
             if isinstance(val, str):
                 row.append(val)
                 continue
