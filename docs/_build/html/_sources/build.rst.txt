@@ -1,18 +1,27 @@
 
 
-Client Build
-------------
+Client Dev Build
+----------------
+The DDOILoggerClient Python module is found on Github. It is installed by first cloning the 
+repository to the server where it is to be run. Then the module is installed with the 
+pip command `pip install .` while in the DDOILoggerClient directory. This installs 
+the client to the current working python’s pip wheel. 
 
-The DDOILoggerClient Python module is found on Github. 
-It is installed by first cloning the repository to the 
-server where it is to be run. Then the module is installed
-with the pip command ``pip install .`` while in the 
-DDOILoggerClient directory. This installs the client
-to the current working python's pip wheel. The logger
-client is imported and run just as any Python module. 
-See the code below for an example client.
+Deployment (Kroot) Build
+------------------------
 
-.. code-block:: python
+1. SVN Checkout `/kroot/src/util/loggerclient/`
+2. Run `make clean && make` to clone the repo from git hub
+3. CD to `/kroot/src/util/loggerclient/ddoiloggerclient`
+4. run `make clean && make && make install`
+
+Running the Logger Client
+-------------------------
+
+The logger client is imported and run just as any Python module. See the code below for an example client.
+
+
+.. code-block:: python 
 
     from ddoiloggerclient import DDOILoggerClient
 
@@ -24,18 +33,14 @@ See the code below for an example client.
     logger = DDOILogger.DDOILogger(subsystem, config, author, progid, semid)
     msg = "an example message"
     logger.debug(msg) 
-
+                
 
 Logger has levels: debug, info, warn, and error.
-Note that it is assumed that the client is on the same local 
-network as the server.
-The Upon creation, the client sends a heartbeat 
-message to the server, checking that it is alive. 
-If it is not, the logger returns an error. The logger 
-then requests valid subsystems and log levels. The 
-logger looks for the server running on port 5570, 
-or whatever is written in the configuration file located 
-at ``./configs/logger_cfg.ini.``
+The Upon creation, the client sends a heartbeat message to the server, checking that it is alive. 
+If it is not, the logger returns an error. The logger then requests valid subsystems 
+and log levels. The logger looks for the server running on port 5570, or whatever is written in 
+the configuration file located at ./ddoiloggerclient/logger_cfg.ini.
+
 
 Server Deployment
 -----------------

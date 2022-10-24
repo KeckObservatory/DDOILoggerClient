@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Client Build &mdash; DDOILoggerClient 0.1 documentation</title>
+  <title>Client Dev Build &mdash; DDOILoggerClient 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -39,7 +39,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="modules.html">DDOILoggerClient</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Client Build</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Client Dev Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#deployment-kroot-build">Deployment (Kroot) Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#running-the-logger-client">Running the Logger Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#server-deployment">Server Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#deployment">Deployment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -59,7 +61,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Client Build</li>
+      <li>Client Dev Build</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/build.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -69,16 +71,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="client-build">
-<h1>Client Build<a class="headerlink" href="#client-build" title="Permalink to this headline"></a></h1>
-<p>The DDOILoggerClient Python module is found on Github.
-It is installed by first cloning the repository to the
-server where it is to be run. Then the module is installed
-with the pip command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> while in the
-DDOILoggerClient directory. This installs the client
-to the current working python’s pip wheel. The logger
-client is imported and run just as any Python module.
-See the code below for an example client.</p>
+  <div class="section" id="client-dev-build">
+<h1>Client Dev Build<a class="headerlink" href="#client-dev-build" title="Permalink to this headline"></a></h1>
+<p>The DDOILoggerClient Python module is found on Github. It is installed by first cloning the
+repository to the server where it is to be run. Then the module is installed with the
+pip command <cite>pip install .</cite> while in the DDOILoggerClient directory. This installs
+the client to the current working python’s pip wheel.</p>
+</div>
+<div class="section" id="deployment-kroot-build">
+<h1>Deployment (Kroot) Build<a class="headerlink" href="#deployment-kroot-build" title="Permalink to this headline"></a></h1>
+<ol class="arabic simple">
+<li><p>SVN Checkout <cite>/kroot/src/util/loggerclient/</cite></p></li>
+<li><p>Run <cite>make clean &amp;&amp; make</cite> to clone the repo from git hub</p></li>
+<li><p>CD to <cite>/kroot/src/util/loggerclient/ddoiloggerclient</cite></p></li>
+<li><p>run <cite>make clean &amp;&amp; make &amp;&amp; make install</cite></p></li>
+</ol>
+</div>
+<div class="section" id="running-the-logger-client">
+<h1>Running the Logger Client<a class="headerlink" href="#running-the-logger-client" title="Permalink to this headline"></a></h1>
+<p>The logger client is imported and run just as any Python module. See the code below for an example client.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ddoiloggerclient</span> <span class="kn">import</span> <span class="n">DDOILoggerClient</span>
 
 <span class="n">subsystem</span><span class="o">=</span><span class="s2">&quot;MOSFIRE&quot;</span>
@@ -92,15 +103,10 @@ See the code below for an example client.</p>
 </pre></div>
 </div>
 <p>Logger has levels: debug, info, warn, and error.
-Note that it is assumed that the client is on the same local
-network as the server.
-The Upon creation, the client sends a heartbeat
-message to the server, checking that it is alive.
-If it is not, the logger returns an error. The logger
-then requests valid subsystems and log levels. The
-logger looks for the server running on port 5570,
-or whatever is written in the configuration file located
-at <code class="docutils literal notranslate"><span class="pre">./configs/logger_cfg.ini.</span></code></p>
+The Upon creation, the client sends a heartbeat message to the server, checking that it is alive.
+If it is not, the logger returns an error. The logger then requests valid subsystems
+and log levels. The logger looks for the server running on port 5570, or whatever is written in
+the configuration file located at ./ddoiloggerclient/logger_cfg.ini.</p>
 </div>
 <div class="section" id="server-deployment">
 <h1>Server Deployment<a class="headerlink" href="#server-deployment" title="Permalink to this headline"></a></h1>
