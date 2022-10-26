@@ -39,16 +39,28 @@ The log body is written out as
 .. code-block:: python
 
     {
-    "id": string,
-    "utc_sent": date string formatted as YYYY-MM-DD HH:MM:SS.ZZ,
-    "subsystem": string,
-    "level": enumerable "debug" or "info" or "warn", or "err",
-    "author": string,
-    "SEMID": string,
-    "PROGID": string,
-    "message": string,
+    "id": str,
+    "utc_sent": date str formatted as YYYY-MM-DD HH:MM:SS.ZZ,
+    "subsystem": str,
+    "level": str either "debug" or "info" or "warn", or "err",
+    "author": str,
+    "SEMID": str,
+    "PROGID": str,
+    "message": str,
     }
 
+In the case of msg_type: ``request_logs``, 
+the log body is written out as
+
+.. code-block:: python
+
+    {
+    "startDate": str | None,
+    "endDate": str | None,
+    "nLogs": int | None,
+    "subsystem": str | None,
+    "dateFormat": str | None           
+    }
 
 For each message the sever returns an acknowledgment message with the following schema:
 ``{resp: 200 || 400, log?: dict, msg: string || dict}`` 
