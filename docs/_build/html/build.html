@@ -1,94 +1,52 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Client Dev Build &mdash; DDOILoggerClient 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Dev Build &#8212; DDOILoggerClient 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API" href="api.html" />
-    <link rel="prev" title="ddoiloggerclient package" href="ddoiloggerclient.html" /> 
-</head>
+    <link rel="prev" title="DDOILoggerClient package" href="ddoiloggerclient.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> DDOILoggerClient
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="modules.html">DDOILoggerClient</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Client Dev Build</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#deployment-kroot-build">Deployment (Kroot) Build</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#running-the-logger-client">Running the Logger Client</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#server-deployment">Server Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#deployment">Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">DDOILoggerClient</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Client Dev Build</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/build.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
   <div class="section" id="client-dev-build">
-<h1>Client Dev Build<a class="headerlink" href="#client-dev-build" title="Permalink to this headline"></a></h1>
+<h1>Client Dev Build<a class="headerlink" href="#client-dev-build" title="Permalink to this headline">¶</a></h1>
 <p>The DDOILoggerClient Python module is found on Github. It is installed by first cloning the
 repository to the server where it is to be run. Then the module is installed with the
 pip command <cite>pip install .</cite> while in the DDOILoggerClient directory. This installs
 the client to the current working python’s pip wheel.</p>
 </div>
 <div class="section" id="deployment-kroot-build">
-<h1>Deployment (Kroot) Build<a class="headerlink" href="#deployment-kroot-build" title="Permalink to this headline"></a></h1>
+<h1>Deployment (Kroot) Build<a class="headerlink" href="#deployment-kroot-build" title="Permalink to this headline">¶</a></h1>
 <ol class="arabic simple">
 <li><p>SVN Checkout <cite>/kroot/src/util/loggerclient/</cite></p></li>
 <li><p>Run <cite>make clean &amp;&amp; make</cite> to clone the repo from git hub</p></li>
-<li><p>CD to <cite>/kroot/src/util/loggerclient/ddoiloggerclient</cite></p></li>
+<li><p>CD to <cite>/kroot/src/util/loggerclient/DDOILoggerClient</cite></p></li>
 <li><p>run <cite>make clean &amp;&amp; make &amp;&amp; make install</cite></p></li>
 </ol>
 </div>
 <div class="section" id="running-the-logger-client">
-<h1>Running the Logger Client<a class="headerlink" href="#running-the-logger-client" title="Permalink to this headline"></a></h1>
+<h1>Running the Logger Client<a class="headerlink" href="#running-the-logger-client" title="Permalink to this headline">¶</a></h1>
 <p>The logger client is imported and run just as any Python module. See the code below for an example client.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ddoiloggerclient</span> <span class="kn">import</span> <span class="n">DDOILoggerClient</span>
 
@@ -106,10 +64,10 @@ the client to the current working python’s pip wheel.</p>
 The Upon creation, the client sends a heartbeat message to the server, checking that it is alive.
 If it is not, the logger returns an error. The logger then requests valid subsystems
 and log levels. The logger looks for the server running on port 5570, or whatever is written in
-the configuration file located at ./ddoiloggerclient/logger_cfg.ini.</p>
+the configuration file located at ./DDOILoggerClient/logger_cfg.ini.</p>
 </div>
 <div class="section" id="server-deployment">
-<h1>Server Deployment<a class="headerlink" href="#server-deployment" title="Permalink to this headline"></a></h1>
+<h1>Server Deployment<a class="headerlink" href="#server-deployment" title="Permalink to this headline">¶</a></h1>
 <p>The server depends on the configuration file located at
 ./configs/server_cfg.ini. This describes the host address,
 port number, and number of workers. Server is deployed by
@@ -122,7 +80,7 @@ file with the pip command</p>
 virtual environment.</p>
 </div>
 <div class="section" id="deployment">
-<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline"></a></h1>
+<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">¶</a></h1>
 <p>The Server that spawns and runs the workers runs as a daemon
 using the Linux process manager Systemd. Scripts are run as
 daemons and restarted should they unexpectedly exit.
@@ -147,34 +105,69 @@ Note how the service uses a Conda environment to run a python instance.</p>
 </div>
 
 
-           </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ddoiloggerclient.html" class="btn btn-neutral float-left" title="ddoiloggerclient package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2022, Tyler Tucker.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DDOILoggerClient</a></h1>
 
-</body>
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">DDOILoggerClient</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Client Dev Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#deployment-kroot-build">Deployment (Kroot) Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#running-the-logger-client">Running the Logger Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#server-deployment">Server Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#deployment">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ddoiloggerclient.html" title="previous chapter">DDOILoggerClient package</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Tyler Tucker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/build.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

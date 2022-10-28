@@ -1,13 +1,13 @@
-ddoiloggerclient package
+DDOILoggerClient package
 ========================
 
 Submodules
 ----------
 
-ddoiloggerclient.DDOILogger module
+DDOILoggerClient.DDOILogger module
 ----------------------------------
 
-.. automodule:: ddoiloggerclient.DDOILogger
+.. automodule:: DDOILoggerClient.DDOILogger
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ ddoiloggerclient.DDOILogger module
 Module contents
 ---------------
 
-.. automodule:: ddoiloggerclient
+.. automodule:: DDOILoggerClient
    :members:
    :undoc-members:
    :show-inheritance:

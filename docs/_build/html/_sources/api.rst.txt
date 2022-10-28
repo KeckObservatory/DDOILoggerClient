@@ -1,5 +1,3 @@
-
-
 API
 ---
 
@@ -14,7 +12,8 @@ The server runs a cluster of workers, each running in background
 thread, waiting to receive messages. ZeroMQ routes messages
 to this cluster, and an idle worker is passed a message.
 When a message is received, the worker checks the message's 
-``msg_type`` value. If it is ``heartbeat`` then a heartbeat 
+``msg_type`` value and processes the request based off of its contents.
+I.E. If ``msg_type`` is ``heartbeat`` then a heartbeat 
 response is sent. If it is ``request_metadata_options`` then
 the server sends log level and subsystem arrays as a response.
 If it is ``log`` the server adds the log to the database and
@@ -34,7 +33,7 @@ JSON objects with the following schema:
     }
 
 in the case of msg_type: ``log``
-The log body is written out as 
+The log body is a dict with the following schema 
 
 .. code-block:: python
 
@@ -49,8 +48,18 @@ The log body is written out as
     "message": str,
     }
 
+For msg_type: ``handle_metadata_options`` the body is a dict
+with the following schema
+
+.. code-block:: python
+
+    {
+    'subsystems': str[],
+    'levels': str[] 
+    }
+
 In the case of msg_type: ``request_logs``, 
-the log body is written out as
+the body is a dict with the following schema
 
 .. code-block:: python
 
@@ -62,6 +71,14 @@ the log body is written out as
     "dateFormat": str | None           
     }
 
+.. csv-table:: API Syntax 
+   :file: _static/api_table.csv
+   :widths: 1, 2, 2, 2 
+   :header-rows: 1
+   :class: longtable
+   :delim: @
+
 For each message the sever returns an acknowledgment message with the following schema:
 ``{resp: 200 || 400, log?: dict, msg: string || dict}`` 
-Successful messages get a response of 200 and messages that fail for whatever reason return a 400. Failed log messages also include the log dictionary. More information should be found in the message value.
+Successful messages get a response of 200 and messages that fail for whatever reason return a 400.
+Failed log messages also include the log dictionary. More information should be found in the message value.

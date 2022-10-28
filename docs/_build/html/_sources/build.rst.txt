@@ -12,7 +12,7 @@ Deployment (Kroot) Build
 
 1. SVN Checkout `/kroot/src/util/loggerclient/`
 2. Run `make clean && make` to clone the repo from git hub
-3. CD to `/kroot/src/util/loggerclient/ddoiloggerclient`
+3. CD to `/kroot/src/util/loggerclient/DDOILoggerClient`
 4. run `make clean && make && make install`
 
 Running the Logger Client
@@ -39,7 +39,7 @@ Logger has levels: debug, info, warn, and error.
 The Upon creation, the client sends a heartbeat message to the server, checking that it is alive. 
 If it is not, the logger returns an error. The logger then requests valid subsystems 
 and log levels. The logger looks for the server running on port 5570, or whatever is written in 
-the configuration file located at ./ddoiloggerclient/logger_cfg.ini.
+the configuration file located at ./DDOILoggerClient/logger_cfg.ini.
 
 
 Server Deployment

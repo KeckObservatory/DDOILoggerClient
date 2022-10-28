@@ -1,0 +1,5 @@
+Message Type @ Request @ Response @ Error
+heartbeat @ {'msg_type': 'heartbeat', 'body': null } @ { 'msg': 'OK', 'resp': 200} @ None
+handle_metadata_options @ { 'msg_type': 'handle_metadata_options', 'body': null } @ { 'msg': dict, 'resp': 200 } @ { 'msg': str, 'resp': 400 }
+logs @ { 'msg_type': 'log', 'body': dict } @ { 'msg': str: 'resp': 200 } @ { 'msg': str, 'resp': 400 }
+request_logs @ { 'msg_type': 'request_logs': 'body': dict } @ { 'msg': str, 'resp': 200 } @ { 'msg': str, resp': 400 }
