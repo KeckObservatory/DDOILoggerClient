@@ -40,9 +40,9 @@ class DDOILogger():
 
         self.server_interface = ServerInterface(self.config, subsystem)
 
-        if not self.server_interface._check_cfg_url_alive():
-            ex_str = "Unable to access backend API at " + self.config['url']
-            raise Exception(ex_str)
+        # if not self.server_interface._check_cfg_url_alive():
+        #     ex_str = "Unable to access backend API at " + self.config['url']
+        #     raise Exception(ex_str)
 
         # Initialize subsystems
         metadata = self.server_interface._get_meta_options()
@@ -185,6 +185,14 @@ class DDOILogger():
         config_loc = os.path.join(config_loc, './logger_cfg.ini')
         return config_loc
 
+    def add_level(self, level):
+        resp = self.server_interface.send_level(level)
+        return json.loads(resp)
+
+    def add_subsystem(self, subsystem, iden):
+        resp = self.server_interface.send_subsystem(subsystem, iden)
+        return json.loads(resp)
+
     @staticmethod
     def handle_response(resp, log, path='./failedLogs.txt'):
         """sends failed logs to local storage to be ingested later 
@@ -295,6 +303,28 @@ class ServerInterface():
             dict: an acknowledgment message from the server
         """
         msg = {'msg_type': 'log', 'body': body}
+        self.socket.send_string(json.dumps(msg))
+        if sendAck:
+            sockets = dict(self.poll.poll(1000))
+            if self.socket in sockets:
+                resp = self.socket.recv()
+                return resp
+        else:
+            return b"{}"
+            
+    def send_subsystem(self, subsystem, iden, sendAck=True):
+        msg = {'msg_type': 'add_subsystem', 'body': {'name': subsystem, 'iden': iden}}
+        self.socket.send_string(json.dumps(msg))
+        if sendAck:
+            sockets = dict(self.poll.poll(1000))
+            if self.socket in sockets:
+                resp = self.socket.recv()
+                return resp
+        else:
+            return b"{}"
+    
+    def send_level(self, level, sendAck=True):
+        msg = {'msg_type': 'add_level', 'body': {'level': level}}
         self.socket.send_string(json.dumps(msg))
         if sendAck:
             sockets = dict(self.poll.poll(1000))

@@ -5,7 +5,6 @@ import json
 import zmq
 import sys
 from datetime import datetime, timedelta
-import requests
 import os
 import configparser
 
@@ -68,8 +67,6 @@ def print_ouput_json_table(logs):
 def init_zmq(url):
     context = zmq.Context()
     socket = context.socket(zmq.DEALER)
-    # identity = u'worker-%s' % self.subsystem
-    # self.socket.identity = identity.encode('ascii')
     socket.connect(url)
     poll = zmq.Poller()
     poll.register(socket, zmq.POLLIN)
