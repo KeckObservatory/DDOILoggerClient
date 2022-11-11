@@ -46,7 +46,6 @@ def test_logger_client():
     assert ack.get('resp', False) == 200, f"did not set level. {ack}"
     subsys = 'testinst'
     iden= 'TESTINST'
-    pdb.set_trace()
     ack = logger.add_subsystem(subsys, iden)
     assert ack.get('resp', False) == 200, f"did not set subsystem. {ack}"
 
@@ -93,5 +92,5 @@ def test_request_logs():
     assert len(logs) == nLogs, f'logs not returned, nLogs {nLogs}!={len(logs)}'
 
 if __name__ == '__main__':
-    testCmd = 'pytest -m client'
+    testCmd = 'python -m pytest -m client'
     os.system(testCmd)
