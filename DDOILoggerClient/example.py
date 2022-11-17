@@ -20,7 +20,6 @@ def create_logger(subsystem, configLoc, author, progid, semid, fileName):
     return logger
 
 if __name__=='__main__':
-    config_loc = os.path.join(os.getcwd(), 'logger_cfg.ini')
     subsystem='MOSFIRE'
     configLoc= None 
     author="ttucker"
