@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Client Dev Build &mdash; DDOILoggerClient 0.1 documentation</title>
+  <title>Logger Server and Client Deployment &mdash; DDOILoggerClient 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -39,11 +42,30 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="modules.html">DDOILoggerClient</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Client Dev Build</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#deployment-kroot-build">Deployment (Kroot) Build</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#running-the-logger-client">Running the Logger Client</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#server-deployment">Server Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#deployment">Deployment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Logger Server and Client Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-logger-server">Installing Logger Server</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#server">Server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#database-deployment">Database Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-procedure">Build Procedure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-environment-setup">Python Environment Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-subservice">Add Subservice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-level">Add Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-logger-client">Installing Logger Client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kroot-build-procedure">Kroot Build Procedure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operations">Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#receiving-logs">Receiving Logs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#zmq-client-api">ZMQ Client API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#change-procedure">Change Procedure</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
@@ -60,8 +82,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Client Dev Build</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Logger Server and Client Deployment</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/build.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -71,63 +93,77 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="client-dev-build">
-<h1>Client Dev Build<a class="headerlink" href="#client-dev-build" title="Permalink to this headline"></a></h1>
-<p>The DDOILoggerClient Python module is found on Github. It is installed by first cloning the
-repository to the server where it is to be run. Then the module is installed with the
-pip command <cite>pip install .</cite> while in the DDOILoggerClient directory. This installs
-the client to the current working python’s pip wheel.</p>
+  <section id="logger-server-and-client-deployment">
+<h1>Logger Server and Client Deployment<a class="headerlink" href="#logger-server-and-client-deployment" title="Permalink to this heading"></a></h1>
+<section id="installing-logger-server">
+<h2>Installing Logger Server<a class="headerlink" href="#installing-logger-server" title="Permalink to this heading"></a></h2>
+<p>The Logger server handles requests from logging instances throughout the Keck Network.
+The logger includes all observing players (SA, OA, Observer, and SW). This server stores and displays logs using a
+Mongo database, an HTTP flask server, and a ZMQ server.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">The</span> <span class="n">MongoDB</span> <span class="n">stores</span> <span class="n">records</span><span class="o">.</span>
+</pre></div>
 </div>
-<div class="section" id="deployment-kroot-build">
-<h1>Deployment (Kroot) Build<a class="headerlink" href="#deployment-kroot-build" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>The HTTP flask server is used to access the logs over HTTP.
+The HTTP server should be used for administrative tasks,
+such as setting additional levels and subsystems.</p></li>
+</ul>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="_images/http-logger-arch.png"><img alt="_images/http-logger-arch.png" src="_images/http-logger-arch.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">High-level architectural view of HTTP logger.
+Client sends a request and the server handles the request.
+When finished the server sends an acknowledgment.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>The ZMQ server acts as the main logger. Handling requests from multiple clients much faster than the HTTP server.</p></li>
+</ul>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="_images/async_server_2.png"><img alt="_images/async_server_2.png" src="_images/async_server_2.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">High-level view of ZMQ logger architecture.
+Multiple clients log to the server, which passes tasks to workers asynchronously.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>An example use case has the logger keep track of the DDOI execution engine as it ingests and processes OBs
+throughout the night. Users will be able to read and understand the state of the execution engine via the logs.</p>
+<p>The source code is located in the GitHub repository. The most up-to-date version is located on the zmq branch.
+The software design document describing form, function, and requirements is found here.</p>
+<section id="server">
+<h3>Server<a class="headerlink" href="#server" title="Permalink to this heading"></a></h3>
+<p>The server vm-ddoilogger’s ip address is 10.95.1.94 and runs using:</p>
+<p><strong>dsibld</strong> - clones GIT repository, build directories, runs systemctl commands.
+Note that systemctl runs scripts as root.</p>
+<p><strong>dsirun</strong> - handles the python environment. Builds the virtual environment, installs libraries, etc.</p>
+<p><strong>Assumptions: This document assumes that you have MongoDB and conda/pip (Python 3) installed on the
+machine that is running ZMQ.</strong></p>
+</section>
+</section>
+<section id="database-deployment">
+<h2>Database Deployment<a class="headerlink" href="#database-deployment" title="Permalink to this heading"></a></h2>
+<p>Transfer the <a class="reference download internal" download="" href="_downloads/c1bbc3b3a3b64fff5204db31f22f1484/logger_db.zip"><code class="xref download docutils literal notranslate"><span class="pre">attached</span> <span class="pre">files</span></code></a> with <code class="docutils literal notranslate"><span class="pre">mongorestore</span></code>.</p>
+</section>
+<section id="build-procedure">
+<h2>Build Procedure<a class="headerlink" href="#build-procedure" title="Permalink to this heading"></a></h2>
+<section id="python-environment-setup">
+<h3>Python Environment Setup<a class="headerlink" href="#python-environment-setup" title="Permalink to this heading"></a></h3>
+<p>The server depends on the configuration file found in the repo. Use the zmq branch.
+This describes the host address, port number, and the number of workers.</p>
 <ol class="arabic simple">
-<li><p>SVN Checkout <cite>/kroot/src/util/loggerclient/</cite></p></li>
-<li><p>Run <cite>make clean &amp;&amp; make</cite> to clone the repo from git hub</p></li>
-<li><p>CD to <cite>/kroot/src/util/loggerclient/DDOILoggerClient</cite></p></li>
-<li><p>run <cite>make clean &amp;&amp; make &amp;&amp; make install</cite></p></li>
+<li><p>Clone the server to the directory /ddoi</p></li>
+<li><p>Using the dsirun account, set the python VE to loggerwith the command conda activate logger. If the logger does env does not exist, the command conda create –name logger python=3.9 creates the environment.</p></li>
 </ol>
-</div>
-<div class="section" id="running-the-logger-client">
-<h1>Running the Logger Client<a class="headerlink" href="#running-the-logger-client" title="Permalink to this headline"></a></h1>
-<p>The logger client is imported and run just as any Python module. See the code below for an example client.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ddoiloggerclient</span> <span class="kn">import</span> <span class="n">DDOILoggerClient</span>
-
-<span class="n">subsystem</span><span class="o">=</span><span class="s2">&quot;MOSFIRE&quot;</span>
-<span class="n">config</span><span class="o">=</span><span class="kc">None</span>
-<span class="n">author</span><span class="o">=</span><span class="s2">&quot;authorNameHere&quot;</span>
-<span class="n">progid</span><span class="o">=</span><span class="s2">&quot;AProgid&quot;</span>
-<span class="n">semid</span><span class="o">=</span><span class="s2">&quot;Asemid&quot;</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">DDOILogger</span><span class="o">.</span><span class="n">DDOILogger</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">progid</span><span class="p">,</span> <span class="n">semid</span><span class="p">)</span>
-<span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;an example message&quot;</span>
-<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Logger has levels: debug, info, warn, and error.
-The Upon creation, the client sends a heartbeat message to the server, checking that it is alive.
-If it is not, the logger returns an error. The logger then requests valid subsystems
-and log levels. The logger looks for the server running on port 5570, or whatever is written in
-the configuration file located at ./DDOILoggerClient/logger_cfg.ini.</p>
-</div>
-<div class="section" id="server-deployment">
-<h1>Server Deployment<a class="headerlink" href="#server-deployment" title="Permalink to this headline"></a></h1>
-<p>The server depends on the configuration file located at
-./configs/server_cfg.ini. This describes the host address,
-port number, and number of workers. Server is deployed by
-first installing the libraries written in <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>
-file with the pip command</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda activate logger &amp;&amp; pip -e requirements.txt</span>
-</pre></div>
-</div>
-<p>The server running on vm-ddoiloggerbuild-new uses the <code class="docutils literal notranslate"><span class="pre">logger</span></code>
-virtual environment.</p>
-</div>
-<div class="section" id="deployment">
-<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline"></a></h1>
-<p>The Server that spawns and runs the workers runs as a daemon
-using the Linux process manager Systemd. Scripts are run as
-daemons and restarted should they unexpectedly exit.
-Systemd configuration files are stored
-in <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/zmq_server.service</span></code>, shown below.</p>
+<p>3. The server is deployed by first installing the libraries described in the requirements.txt file with the following pip command.
+.. code-block::  console</p>
+<blockquote>
+<div><p>pip -e requirements.txt</p>
+</div></blockquote>
+</section>
+</section>
+<section id="deployment">
+<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading"></a></h2>
+<p>Simply running the command python zmq_server.py starts the server. To run it as a daemon, use the Linux process manager Systemd. Scripts are run as daemons and restarted should they unexpectedly exit. Systemd configuration files are stored in /etc/systemd/system/zmq_server.service, shown below. Using the dsibld account create the file below.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
 <span class="go">Description=ZMQ Logger Server</span>
 <span class="go">After=multi-user.target</span>
@@ -135,16 +171,250 @@ in <code class="docutils literal notranslate"><span class="pre">/etc/systemd/sys
 <span class="go">[Service]</span>
 <span class="go">Type=simple</span>
 <span class="go">Restart=always</span>
-<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python /home/dsieng/DDOILoggerServer/zmq_server.py</span>
+<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/zmq_server.py</span>
+<span class="go">[Install]</span>
+<span class="go">WantedBy=multi-user.target</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>You can start, stop, and check the status of the daemon with the command systemctl start/stop/status zmq_server</dt><dd><p>Note how the service uses a Conda environment to run a python instance.</p>
+</dd>
+</dl>
+<p>Run the HTTP server by running the http_server.service file shown below. Run it with systemctl http_server start.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
+<span class="go">Description=HTTP Logger Server</span>
+<span class="go">After=multi-user.target</span>
+
+<span class="go">[Service]</span>
+<span class="go">Type=simple</span>
+<span class="go">Restart=always</span>
+<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/zmq_server.py</span>
 
 <span class="go">[Install]</span>
 <span class="go">WantedBy=multi-user.target</span>
 </pre></div>
 </div>
-<p>You can start, stop, and check the status of the daemon with the command
-<code class="docutils literal notranslate"><span class="pre">systemd</span> <span class="pre">start/stop/status</span> <span class="pre">zmq_server</span></code>
-Note how the service uses a Conda environment to run a python instance.</p>
+<p>Note that both servers depend on using the ./configs/server_cfg.ini file and contains the ports and URLs
+required to run the servers.</p>
+<a class="reference internal image-reference" href="_images/server_cfg.png"><img alt="Alternative text" src="_images/server_cfg.png" style="width: 300px;" /></a>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">nworkers</span></code> represent the number of workers used.
+The ideal amount of workers matches the maximul number of threads available to the server.</p>
+<p>Check that the server is working with the curl statement to get a dump of one log.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl http://XX.XX.XX.XX:XXXX/api/log/get_log?n_logs=1</span>
+</pre></div>
 </div>
+<p>If you do not see logs, check that the MongoDB service is running with the command <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">mongod</span> <span class="pre">.</span></code></p>
+<p>You should see something similar to the output below.</p>
+<a class="reference internal image-reference" href="_images/systemctl_status.png"><img alt="Alternative text" src="_images/systemctl_status.png" style="width: 600px;" /></a>
+<p>If that works and you still are not seeing any longs, run the mongosh utility. If it is running and you are not receiving any logs, check the database directly.</p>
+<ol class="arabic simple">
+<li><p>while in the mongosh shell enter show dbs you should see a logs database.</p></li>
+<li><p>Enter use logs to select the logs database.</p></li>
+<li><p>Enter show collections you should see three collections: levels, logs, and subsystems.</p></li>
+</ol>
+<a class="reference internal image-reference" href="_images/mdb-coll.png"><img alt="Alternative text" src="_images/mdb-coll.png" style="width: 300px;" /></a>
+<ol class="arabic simple" start="4">
+<li><p>Enter db.logs.find().count() you should receive a non-zero number of logs.</p></li>
+<li><p>Enter db.levels.find().count() you should have 4 or more levels.</p></li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><p>Enter db.subsystems.find().count() you should have 2 or more subsystems.</p></li>
+</ol>
+</section>
+<section id="add-subservice">
+<h2>Add Subservice<a class="headerlink" href="#add-subservice" title="Permalink to this heading"></a></h2>
+<p>Add a subservervice by inputting the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl -X PUT http://XX.XX.XX.XX:XXXX/api/meta/add_subsystem -d &quot;name=TEST&amp;iden=test&quot;</span>
+</pre></div>
+</div>
+<p>Check that it was added successfully with the following curl command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">  curl http://XX.XX.XX.XX:XXXX/api/meta/valid_subsystems</span>
+
+<span class="go">You should see something like the output shown below.</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/subsystem_curl.png"><img alt="Alternative text" src="_images/subsystem_curl.png" style="width: 600px;" /></a>
+</section>
+<section id="add-level">
+<h2>Add Level<a class="headerlink" href="#add-level" title="Permalink to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl -X PUT http://XX.XX.XX.XX:XXXX/api/meta/add_level -d &quot;level=test&quot;</span>
+</pre></div>
+</div>
+<p>Check that it was successfully added with the following curl command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl http://XX.XX.XX.XX:XXXX/api/meta/valid_levels</span>
+</pre></div>
+</div>
+<p>You should see something like the output shown below.</p>
+<a class="reference internal image-reference" href="_images/level_curl.png"><img alt="Alternative text" src="_images/level_curl.png" style="width: 600px;" /></a>
+</section>
+<section id="installing-logger-client">
+<h2>Installing Logger Client<a class="headerlink" href="#installing-logger-client" title="Permalink to this heading"></a></h2>
+<p>Logger Client sends requests to Server using ZeroMQ. The logger is set up to be used with the Python Logger Library. This allows the logger to have multiple outputs, such as printing to sdout, and writing to a local file in addition to sending the logs to a server.</p>
+<p><strong>Assumptions: Kroot etc and kpython3 are installed.</strong></p>
+<section id="kroot-build-procedure">
+<h3>Kroot Build Procedure<a class="headerlink" href="#kroot-build-procedure" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>SVN Checkout /kroot/src/util/loggerclient/</p></li>
+<li><p>Run make install to clone the repo from GitHub and deploy it to kroot.</p></li>
+</ol>
+<p>The client is now available via kpython3.</p>
+</section>
+<section id="operations">
+<h3>Operations<a class="headerlink" href="#operations" title="Permalink to this heading"></a></h3>
+<p><strong>Sending Logs</strong></p>
+<p>The following example script is used to sets up a logger that:</p>
+<ol class="arabic simple">
+<li><p>Logs to stdout.</p></li>
+<li><p>Logs to a local file named “test.log”.</p></li>
+<li><p>Sends logs to the Logger server.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">DDOILoggerClient</span> <span class="kn">import</span> <span class="n">DDOILogger</span> <span class="k">as</span> <span class="n">dl</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">StreamHandler</span><span class="p">,</span> <span class="n">FileHandler</span>
+<span class="kn">import</span> <span class="nn">pdb</span>
+
+<span class="k">def</span> <span class="nf">create_logger</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="n">configLoc</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">progid</span><span class="p">,</span> <span class="n">semid</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">zmq_log_handler</span> <span class="o">=</span> <span class="n">dl</span><span class="o">.</span><span class="n">ZMQHandler</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="n">configLoc</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">progid</span><span class="p">,</span> <span class="n">semid</span><span class="p">)</span>
+    <span class="n">ch</span> <span class="o">=</span> <span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">fl</span> <span class="o">=</span> <span class="n">FileHandler</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+    <span class="n">fl</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">zmq_log_handler</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logger</span>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">subsystem</span><span class="o">=</span><span class="s1">&#39;MOSFIRE&#39;</span>
+    <span class="n">configLoc</span><span class="o">=</span> <span class="kc">None</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;ttucker&quot;</span>
+    <span class="n">progid</span><span class="o">=</span><span class="s2">&quot;2022B&quot;</span>
+    <span class="n">semid</span><span class="o">=</span><span class="s2">&quot;1234&quot;</span>
+    <span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;test.log&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="n">configLoc</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">progid</span><span class="p">,</span> <span class="n">semid</span><span class="p">,</span> <span class="n">fileName</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">({</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;logger handler test2&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;warning&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The remainder of the script uses the standard python logger module.
+Test that the client is logging properly by running the script.
+You should see an output log in the terminal, and <code class="docutils literal notranslate"><span class="pre">test.log</span></code> file.
+Check that the log is in the database with the command <code class="docutils literal notranslate"><span class="pre">getlogz</span> <span class="pre">--nLogs</span> <span class="pre">1</span></code>.
+You should see the output below.</p>
+<a class="reference internal image-reference" href="_images/get_logz.png"><img alt="Alternative text" src="_images/get_logz.png" style="width: 800px;" /></a>
+<p>Note that the logger can accept a dictionary with keys “msg” and “level”.
+This sets the level in the database. The logger also accepts strings,
+but will designate the level as “INFO”.</p>
+</section>
+<section id="receiving-logs">
+<h3>Receiving Logs<a class="headerlink" href="#receiving-logs" title="Permalink to this heading"></a></h3>
+<p><strong>HTTP Server</strong></p>
+<p>Server receives logs with the URL <code class="docutils literal notranslate"><span class="pre">http://{url}:{port}/api/log/get_logs</span></code>.</p>
+<p>See below for an example query with all optional arguments.</p>
+<p><code class="docutils literal notranslate"><span class="pre">http://{url}:{port}/api/log/get_logs?start_date=2022-11-14&amp;end_date=2022-11-15&amp;subsystem=a_subsystem&amp;n_logs=10&amp;date_format=%Y-%m-%d</span></code></p>
+<p>Output is returned as JSON.</p>
+<p><strong>CLI getlogz Utility</strong></p>
+<p>The kroot deploy procedure introduces a command line utility called getlogz that returns a tsv
+(tab-separated value) stout See below for an example.</p>
+<a class="reference internal image-reference" href="_images/get_logz2.png"><img alt="Alternative text" src="_images/get_logz2.png" style="width: 800px;" /></a>
+<p>For a full list of optional argument flags, enter getlogs –help or see below for output.</p>
+<a class="reference internal image-reference" href="_images/getlogz_help.png"><img alt="Alternative text" src="_images/getlogz_help.png" style="width: 800px;" /></a>
+</section>
+</section>
+<section id="zmq-client-api">
+<h2>ZMQ Client API<a class="headerlink" href="#zmq-client-api" title="Permalink to this heading"></a></h2>
+<p>The ZeroMQ pattern used is an asynchronous Request-Reply pattern. The client sends request messages,
+and a response is sent back to the server. Should the server be down for any reason, the client
+will attempt to send messages and receives no response from the server, these messages can be cached
+and resent as soon as the server is restored.</p>
+<p>The server runs a cluster of workers, each running in a background thread,
+waiting to receive messages. ZeroMQ routes messages to this cluster and an idle worker is passed a message.
+When a message is received, the worker checks the message’s msg_type value and processes the request based
+off of its contents. I.E. If msg_type is heartbeat then a heartbeat response is sent.
+If it is request_metadata_options then the server sends log level and subsystem arrays as a response.
+If it is log the server adds the log to the database and sends back an acknowledgment message,
+detailing if it was successful or not.</p>
+<p>The server depends on the configuration file located at ./configs/server_cfg.ini.
+Messages sent to the server are sent as serialized JSON objects with the following schema:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;msg_type&quot;</span><span class="p">:</span> <span class="n">enumerable</span> <span class="s2">&quot;log&quot;</span> <span class="ow">or</span> <span class="s2">&quot;heartbeat&quot;</span> <span class="ow">or</span> <span class="s2">&quot;request_metadata_options&quot;</span><span class="p">,</span>
+<span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="nb">dict</span> <span class="ow">or</span> <span class="kc">None</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>in the case of msg_type: log The log body is a dict with the following schema</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="s2">&quot;utc_sent&quot;</span><span class="p">:</span> <span class="n">date</span> <span class="nb">str</span> <span class="n">formatted</span> <span class="k">as</span> <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">HH</span><span class="p">:</span><span class="n">MM</span><span class="p">:</span><span class="n">SS</span><span class="o">.</span><span class="n">ZZ</span><span class="p">,</span>
+<span class="s2">&quot;subsystem&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="n">either</span> <span class="s2">&quot;debug&quot;</span> <span class="ow">or</span> <span class="s2">&quot;info&quot;</span> <span class="ow">or</span> <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="ow">or</span> <span class="s2">&quot;err&quot;</span><span class="p">,</span>
+<span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="s2">&quot;SEMID&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="s2">&quot;PROGID&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For msg_type: handle_metadata_options the body is a dict with the following schema</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s1">&#39;subsystems&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">[],</span>
+<span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">[]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the case of msg_type: request_logs, the body is a dict with the following schema</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;startDate&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="s2">&quot;endDate&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="s2">&quot;nLogs&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="s2">&quot;subsystem&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="s2">&quot;dateFormat&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/api_table.png"><img alt="Alternative text" src="_images/api_table.png" style="width: 800px;" /></a>
+<dl class="simple">
+<dt>For each message, the server returns an acknowledgment message with the following schema:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">{resp:</span> <span class="pre">200</span> <span class="pre">||</span> <span class="pre">400,</span> <span class="pre">log?:</span> <span class="pre">dict,</span> <span class="pre">msg:</span> <span class="pre">string</span> <span class="pre">||</span> <span class="pre">dict}</span></code>
+Successful messages get a response of 200, and messages that fail for whatever reason return a 400.
+Failed log messages also include the log dictionary. More information should be found in the message value.</p>
+</dd>
+</dl>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting:<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<p><strong>The client crashes when initializing:</strong>
+The initial handshake with the server probably went wrong. Upon first connection,
+the client requests the server to send back metadata (2 lists, comprising valid levels and subsystems).
+Without this handshake, it is impossible to run the logger.</p>
+<ul class="simple">
+<li><p>Check that the config file’s URL and port match the server.</p></li>
+<li><p>Is the server running? Check that the server is running on vm-ddoilogger with the command</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">zmq_logger</span></code> using the dsirun account.</p>
+<p><strong>Logs are not making it to the database:</strong>
+The Server may be down. The logs sent are stored by the client in a queue and are dispatched when the server reconnects.</p>
+<ul class="simple">
+<li><p>Is the server running? Check that the server is running on vm-ddoilogger with the command sudo systemctl status zmq_logger using the dsirun account. If the server is running try sudo systemctl restart zmq_logger and recheck the status.</p></li>
+<li><p>The server is down. check that the mongod service is in operation on vm-ddoilogger with the command sudo systemctl status mongod using the dsirun account.</p></li>
+</ul>
+<p><strong>Nothing is working and I just want to disable the ZMQHandler class:</strong>
+In the event that the troubleshooting process does not resolve the problem,
+it is possible to disable the ZMQHandler class, which disables logging into the server.
+In the example.py script comment out zmq_log_handler and logger.addHandler(zmq_log_handler).
+This will still enable logging to stdout and to a file.</p>
+</section>
+<section id="change-procedure">
+<h2>Change Procedure<a class="headerlink" href="#change-procedure" title="Permalink to this heading"></a></h2>
+<p>Changes made to either client or server need to be mentioned in the day logs.
+Source code lives on GIT, be sure to include commit messages of what specifically changed and why.
+When in doubt of change make a branch instead of overwriting a currently working branch.</p>
+</section>
+</section>
 
 
            </div>
