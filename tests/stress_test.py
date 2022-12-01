@@ -10,7 +10,9 @@ import logging
 from logging import StreamHandler, FileHandler
 from time import sleep
 sys.path.append('../DDOILoggerClient')
-from DDOILogger import ZMQHandler
+
+#from DDOILogger import ZMQHandler
+from DDOILoggerClient import ZMQHandler
 
 
 def get_mongodb():
@@ -67,7 +69,7 @@ if __name__=='__main__':
     logger = init_logger()
     db = get_mongodb()
     # url="tcp://localhost:5570"
-    url="http://10.96.10.117:5000/api/log/get_logs?"
+    url="tcp://10.95.1.94:5570"
     socket, poll = init_zmq(url)
     counter = 0
     while True:
