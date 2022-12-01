@@ -9,10 +9,10 @@ from datetime import datetime
 import logging 
 from logging import StreamHandler, FileHandler
 from time import sleep
-sys.path.append('../DDOILoggerClient')
 
+# sys.path.append('../DDOILoggerClient')
 #from DDOILogger import ZMQHandler
-from DDOILoggerClient import ZMQHandler
+from DDOILoggerClient import DDOILogger as dl 
 
 
 def get_mongodb():
@@ -21,7 +21,7 @@ def get_mongodb():
 
 def create_logger(subsystem, configLoc, author, progid, semid, fileName):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    zmq_log_handler = ZMQHandler(subsystem, configLoc, author, progid, semid)
+    zmq_log_handler = dl.ZMQHandler(subsystem, configLoc, author, progid, semid)
     ch = StreamHandler()
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
