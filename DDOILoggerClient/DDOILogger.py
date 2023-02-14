@@ -3,9 +3,41 @@ from datetime import datetime
 import os
 import configparser
 import json
-import requests
+from json import JSONDecodeError
 import zmq
 import pdb
+from logging import StreamHandler
+
+class ZMQHandler(StreamHandler):
+    """
+
+    Args:
+        StreamHandler (_type_): _description_
+    """
+
+    def __init__(self, subsystem, configLoc, author, progid, semid):
+        StreamHandler.__init__(self)
+
+        self.zmq_client_logger = DDOILogger(subsystem, configLoc, author, progid, semid)
+
+    def emit(self, record):
+
+        msg = self.format(record)
+        msg = msg.replace('\'', '\"')
+        try:
+            msg = json.loads(msg)
+            level = msg.get('level', 'info').upper()
+            text = msg.get('msg', "")
+            if level == 'INFO':
+                self.zmq_client_logger.info(text)
+            if level == 'DEBUG':
+                self.zmq_client_logger.debug(text)
+            if level == 'WARNING':
+                self.zmq_client_logger.warn(text)
+            if level == 'ERROR':
+                self.zmq_client_logger.error(text)
+        except JSONDecodeError as err:
+            self.zmq_client_logger.info(msg)
 
 """Instantiable class for logging within the DDOI ecosystem
 """
@@ -216,23 +248,6 @@ class DDOILogger():
         except Exception as err:
             print(f'handle_response error: {err}')
     
-    @staticmethod
-    def read_failed_logs(path='./failedLogs.txt'):
-        """read from a text file of failed logs
-
-        Parameters
-        ----------
-        path : str, optional
-            path to write log files. Defaults to './failedLogs'.
-        Returns
-        -------
-            list: a list of the failed logs 
-        """
-        if not os.path.exists(path):
-            return []
-        return [json.loads(i) for i in open(path,'r').readlines()]
-
-
 class ServerInterface():
     """ZeroMQ client that interfaces with the server
     """
@@ -247,7 +262,7 @@ class ServerInterface():
     def _init_zmq(self):
         context = zmq.Context()
         self.socket = context.socket(zmq.DEALER)
-        identity = u'worker-%s' % self.subsystem
+        identity = u'%s' % self.subsystem
         self.socket.identity = identity.encode('ascii')
         self.socket.connect(self.config['url'])
         print('Client %s started' % (identity))
@@ -285,7 +300,7 @@ class ServerInterface():
         self.socket.send_string(json.dumps(msg)) #  zeromq method is faster
         sockets = dict(self.poll.poll(self.poll_timeout))
         resp = json.loads(self.socket.recv()) if self.socket in sockets else {}
-        assert resp.get('resp', False) == 200, "metadata options not recieved: {resp.get('msg', 'no msg found')}"
+        assert resp.get('resp', False) == 200, f"metadata options not recieved: {resp.get('msg', 'no msg found')}"
         metadata = resp.get('msg')
         return metadata 
         
