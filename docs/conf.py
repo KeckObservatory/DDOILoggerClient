@@ -51,7 +51,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = 'keck'
 html_theme_path = ['_themes']
-html_logo = 'images/logo_128.png'
+html_logo = '_static/logo_128.png'
 
 
 # Add any paths that contain custom static files (such as style sheets) here,
