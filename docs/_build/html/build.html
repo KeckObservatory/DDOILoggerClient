@@ -1,102 +1,51 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logger Server and Client Deployment &mdash; DDOILoggerClient 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/js/theme.js"></script>
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Logger Server and Client Deployment &#8212; DDOILoggerClient 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/keck.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API" href="api.html" />
     <link rel="prev" title="DDOILoggerClient package" href="ddoiloggerclient.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ddoiloggerclient.html" title="DDOILoggerClient package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">DDOILoggerClient 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Logger Server and Client Deployment</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> DDOILoggerClient
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="modules.html">DDOILoggerClient</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Logger Server and Client Deployment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installing-logger-server">Installing Logger Server</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#server">Server</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#database-deployment">Database Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#build-procedure">Build Procedure</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#python-environment-setup">Python Environment Setup</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#add-subservice">Add Subservice</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#add-level">Add Level</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installing-logger-client">Installing Logger Client</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#kroot-build-procedure">Kroot Build Procedure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#operations">Operations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#receiving-logs">Receiving Logs</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#zmq-client-api">ZMQ Client API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#change-procedure">Change Procedure</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
-</ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">DDOILoggerClient</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Logger Server and Client Deployment</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/build.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
   <section id="logger-server-and-client-deployment">
-<h1>Logger Server and Client Deployment<a class="headerlink" href="#logger-server-and-client-deployment" title="Permalink to this heading"></a></h1>
+<h1>Logger Server and Client Deployment<a class="headerlink" href="#logger-server-and-client-deployment" title="Permalink to this heading">¶</a></h1>
 <section id="installing-logger-server">
-<h2>Installing Logger Server<a class="headerlink" href="#installing-logger-server" title="Permalink to this heading"></a></h2>
+<h2>Installing Logger Server<a class="headerlink" href="#installing-logger-server" title="Permalink to this heading">¶</a></h2>
 <p>The Logger server handles requests from logging instances throughout the Keck Network.
 The logger includes all observing players (SA, OA, Observer, and SW). This server stores and displays logs using a
 Mongo database, an HTTP flask server, and a ZMQ server.:</p>
@@ -113,7 +62,7 @@ such as setting additional levels and subsystems.</p></li>
 <figcaption>
 <p><span class="caption-text">High-level architectural view of HTTP logger.
 Client sends a request and the server handles the request.
-When finished the server sends an acknowledgment.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+When finished the server sends an acknowledgment.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 <ul class="simple">
@@ -123,7 +72,7 @@ When finished the server sends an acknowledgment.</span><a class="headerlink" hr
 <a class="reference internal image-reference" href="_images/async_server_2.png"><img alt="_images/async_server_2.png" src="_images/async_server_2.png" style="width: 600px;" /></a>
 <figcaption>
 <p><span class="caption-text">High-level view of ZMQ logger architecture.
-Multiple clients log to the server, which passes tasks to workers asynchronously.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+Multiple clients log to the server, which passes tasks to workers asynchronously.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>An example use case has the logger keep track of the DDOI execution engine as it ingests and processes OBs
@@ -131,7 +80,7 @@ throughout the night. Users will be able to read and understand the state of the
 <p>The source code is located in the GitHub repository. The most up-to-date version is located on the zmq branch.
 The software design document describing form, function, and requirements is found here.</p>
 <section id="server">
-<h3>Server<a class="headerlink" href="#server" title="Permalink to this heading"></a></h3>
+<h3>Server<a class="headerlink" href="#server" title="Permalink to this heading">¶</a></h3>
 <p>The server vm-ddoilogger’s ip address is 10.95.1.94 and runs using:</p>
 <p><strong>dsibld</strong> - clones GIT repository, build directories, runs systemctl commands.
 Note that systemctl runs scripts as root.</p>
@@ -141,13 +90,13 @@ machine that is running ZMQ.</strong></p>
 </section>
 </section>
 <section id="database-deployment">
-<h2>Database Deployment<a class="headerlink" href="#database-deployment" title="Permalink to this heading"></a></h2>
+<h2>Database Deployment<a class="headerlink" href="#database-deployment" title="Permalink to this heading">¶</a></h2>
 <p>Transfer the <a class="reference download internal" download="" href="_downloads/c1bbc3b3a3b64fff5204db31f22f1484/logger_db.zip"><code class="xref download docutils literal notranslate"><span class="pre">attached</span> <span class="pre">files</span></code></a> with <code class="docutils literal notranslate"><span class="pre">mongorestore</span></code>.</p>
 </section>
 <section id="build-procedure">
-<h2>Build Procedure<a class="headerlink" href="#build-procedure" title="Permalink to this heading"></a></h2>
+<h2>Build Procedure<a class="headerlink" href="#build-procedure" title="Permalink to this heading">¶</a></h2>
 <section id="python-environment-setup">
-<h3>Python Environment Setup<a class="headerlink" href="#python-environment-setup" title="Permalink to this heading"></a></h3>
+<h3>Python Environment Setup<a class="headerlink" href="#python-environment-setup" title="Permalink to this heading">¶</a></h3>
 <p>The server depends on the configuration file found in the repo. Use the zmq branch.
 This describes the host address, port number, and the number of workers.</p>
 <ol class="arabic simple">
@@ -162,7 +111,7 @@ This describes the host address, port number, and the number of workers.</p>
 </section>
 </section>
 <section id="deployment">
-<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading"></a></h2>
+<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading">¶</a></h2>
 <p>Simply running the command python zmq_server.py starts the server. To run it as a daemon, use the Linux process manager Systemd. Scripts are run as daemons and restarted should they unexpectedly exit. Systemd configuration files are stored in /etc/systemd/system/zmq_server.service, shown below. Using the dsibld account create the file below.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
 <span class="go">Description=ZMQ Logger Server</span>
@@ -222,7 +171,7 @@ The ideal amount of workers matches the maximul number of threads available to t
 </ol>
 </section>
 <section id="add-subservice">
-<h2>Add Subservice<a class="headerlink" href="#add-subservice" title="Permalink to this heading"></a></h2>
+<h2>Add Subservice<a class="headerlink" href="#add-subservice" title="Permalink to this heading">¶</a></h2>
 <p>Add a subservervice by inputting the following command.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl -X PUT http://XX.XX.XX.XX:XXXX/api/meta/add_subsystem -d &quot;name=TEST&amp;iden=test&quot;</span>
 </pre></div>
@@ -236,7 +185,7 @@ The ideal amount of workers matches the maximul number of threads available to t
 <a class="reference internal image-reference" href="_images/subsystem_curl.png"><img alt="Alternative text" src="_images/subsystem_curl.png" style="width: 600px;" /></a>
 </section>
 <section id="add-level">
-<h2>Add Level<a class="headerlink" href="#add-level" title="Permalink to this heading"></a></h2>
+<h2>Add Level<a class="headerlink" href="#add-level" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl -X PUT http://XX.XX.XX.XX:XXXX/api/meta/add_level -d &quot;level=test&quot;</span>
 </pre></div>
 </div>
@@ -248,11 +197,11 @@ The ideal amount of workers matches the maximul number of threads available to t
 <a class="reference internal image-reference" href="_images/level_curl.png"><img alt="Alternative text" src="_images/level_curl.png" style="width: 600px;" /></a>
 </section>
 <section id="installing-logger-client">
-<h2>Installing Logger Client<a class="headerlink" href="#installing-logger-client" title="Permalink to this heading"></a></h2>
+<h2>Installing Logger Client<a class="headerlink" href="#installing-logger-client" title="Permalink to this heading">¶</a></h2>
 <p>Logger Client sends requests to Server using ZeroMQ. The logger is set up to be used with the Python Logger Library. This allows the logger to have multiple outputs, such as printing to sdout, and writing to a local file in addition to sending the logs to a server.</p>
 <p><strong>Assumptions: Kroot etc and kpython3 are installed.</strong></p>
 <section id="kroot-build-procedure">
-<h3>Kroot Build Procedure<a class="headerlink" href="#kroot-build-procedure" title="Permalink to this heading"></a></h3>
+<h3>Kroot Build Procedure<a class="headerlink" href="#kroot-build-procedure" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>SVN Checkout /kroot/src/util/loggerclient/</p></li>
 <li><p>Run make install to clone the repo from GitHub and deploy it to kroot.</p></li>
@@ -260,7 +209,7 @@ The ideal amount of workers matches the maximul number of threads available to t
 <p>The client is now available via kpython3.</p>
 </section>
 <section id="operations">
-<h3>Operations<a class="headerlink" href="#operations" title="Permalink to this heading"></a></h3>
+<h3>Operations<a class="headerlink" href="#operations" title="Permalink to this heading">¶</a></h3>
 <p><strong>Sending Logs</strong></p>
 <p>The following example script is used to sets up a logger that:</p>
 <ol class="arabic simple">
@@ -312,7 +261,7 @@ This sets the level in the database. The logger also accepts strings,
 but will designate the level as “INFO”.</p>
 </section>
 <section id="receiving-logs">
-<h3>Receiving Logs<a class="headerlink" href="#receiving-logs" title="Permalink to this heading"></a></h3>
+<h3>Receiving Logs<a class="headerlink" href="#receiving-logs" title="Permalink to this heading">¶</a></h3>
 <p><strong>HTTP Server</strong></p>
 <p>Server receives logs with the URL <code class="docutils literal notranslate"><span class="pre">http://{url}:{port}/api/log/get_logs</span></code>.</p>
 <p>See below for an example query with all optional arguments.</p>
@@ -327,7 +276,7 @@ but will designate the level as “INFO”.</p>
 </section>
 </section>
 <section id="zmq-client-api">
-<h2>ZMQ Client API<a class="headerlink" href="#zmq-client-api" title="Permalink to this heading"></a></h2>
+<h2>ZMQ Client API<a class="headerlink" href="#zmq-client-api" title="Permalink to this heading">¶</a></h2>
 <p>The ZeroMQ pattern used is an asynchronous Request-Reply pattern. The client sends request messages,
 and a response is sent back to the server. Should the server be down for any reason, the client
 will attempt to send messages and receives no response from the server, these messages can be cached
@@ -386,7 +335,7 @@ Failed log messages also include the log dictionary. More information should be 
 </dl>
 </section>
 <section id="troubleshooting">
-<h2>Troubleshooting:<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<h2>Troubleshooting:<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
 <p><strong>The client crashes when initializing:</strong>
 The initial handshake with the server probably went wrong. Upon first connection,
 the client requests the server to send back metadata (2 lists, comprising valid levels and subsystems).
@@ -409,7 +358,7 @@ In the example.py script comment out zmq_log_handler and logger.addHandler(zmq_l
 This will still enable logging to stdout and to a file.</p>
 </section>
 <section id="change-procedure">
-<h2>Change Procedure<a class="headerlink" href="#change-procedure" title="Permalink to this heading"></a></h2>
+<h2>Change Procedure<a class="headerlink" href="#change-procedure" title="Permalink to this heading">¶</a></h2>
 <p>Changes made to either client or server need to be mentioned in the day logs.
 Source code lives on GIT, be sure to include commit messages of what specifically changed and why.
 When in doubt of change make a branch instead of overwriting a currently working branch.</p>
@@ -417,34 +366,92 @@ When in doubt of change make a branch instead of overwriting a currently working
 </section>
 
 
-           </div>
+            <div class="clearer"></div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ddoiloggerclient.html" class="btn btn-neutral float-left" title="DDOILoggerClient package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2022, Tyler Tucker.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Logger Server and Client Deployment</a><ul>
+<li><a class="reference internal" href="#installing-logger-server">Installing Logger Server</a><ul>
+<li><a class="reference internal" href="#server">Server</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#database-deployment">Database Deployment</a></li>
+<li><a class="reference internal" href="#build-procedure">Build Procedure</a><ul>
+<li><a class="reference internal" href="#python-environment-setup">Python Environment Setup</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deployment">Deployment</a></li>
+<li><a class="reference internal" href="#add-subservice">Add Subservice</a></li>
+<li><a class="reference internal" href="#add-level">Add Level</a></li>
+<li><a class="reference internal" href="#installing-logger-client">Installing Logger Client</a><ul>
+<li><a class="reference internal" href="#kroot-build-procedure">Kroot Build Procedure</a></li>
+<li><a class="reference internal" href="#operations">Operations</a></li>
+<li><a class="reference internal" href="#receiving-logs">Receiving Logs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#zmq-client-api">ZMQ Client API</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting:</a></li>
+<li><a class="reference internal" href="#change-procedure">Change Procedure</a></li>
+</ul>
+</li>
+</ul>
 
-</body>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="ddoiloggerclient.html"
+                          title="previous chapter">DDOILoggerClient package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="api.html"
+                          title="next chapter">API</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/build.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ddoiloggerclient.html" title="DDOILoggerClient package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">DDOILoggerClient 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Logger Server and Client Deployment</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Tyler Tucker.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
 </html>
