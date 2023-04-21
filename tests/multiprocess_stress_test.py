@@ -10,7 +10,7 @@ import logging
 from logging import StreamHandler, FileHandler
 from time import sleep
 from multiprocessing import Process
-from random import poisson
+from numpy.random import poisson
 
 # sys.path.append('../DDOILoggerClient')
 #from DDOILogger import ZMQHandler
