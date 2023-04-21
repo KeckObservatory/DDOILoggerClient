@@ -91,9 +91,9 @@ def run_stress_test(idx):
 
 if __name__=='__main__':
     logger = init_logger()
-    num_workers = 4
+    num_workers = 1
     for idx in range(num_workers):
-        p = Process(target=run_stress_test, args=(idx))
+        p = Process(target=run_stress_test, args=[idx])
         p.start()
 
 
