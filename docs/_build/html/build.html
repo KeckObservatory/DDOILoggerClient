@@ -110,7 +110,11 @@ This describes the host address, port number, and the number of workers.</p>
 </section>
 <section id="deployment">
 <h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading">¶</a></h2>
-<p>Simply running the command python zmq_server.py starts the server. To run it as a daemon, use the Linux process manager Systemd. Scripts are run as daemons and restarted should they unexpectedly exit. Systemd configuration files are stored in /etc/systemd/system/zmq_server.service, shown below. Using the dsibld account create the file below.</p>
+<dl class="simple">
+<dt>Simply running the command python zmq_server.py starts the server. To run it as a daemon, use the Linux process manager Systemd.</dt><dd><p>Scripts are run as daemons and restarted should they unexpectedly exit. Systemd configuration files are stored in /etc/systemd/system/zmq_logger.service,
+shown below. Using the dsibld account create the file below.</p>
+</dd>
+</dl>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
 <span class="go">Description=ZMQ Logger Server</span>
 <span class="go">After=multi-user.target</span>
@@ -118,16 +122,16 @@ This describes the host address, port number, and the number of workers.</p>
 <span class="go">[Service]</span>
 <span class="go">Type=simple</span>
 <span class="go">Restart=always</span>
-<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/zmq_server.py</span>
+<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py</span>
 <span class="go">[Install]</span>
 <span class="go">WantedBy=multi-user.target</span>
 </pre></div>
 </div>
 <dl class="simple">
-<dt>You can start, stop, and check the status of the daemon with the command systemctl start/stop/status zmq_server</dt><dd><p>Note how the service uses a Conda environment to run a python instance.</p>
+<dt>You can start, stop, and check the status of the daemon with the command <cite>systemctl start/stop/status zmq_logger</cite></dt><dd><p>Note how the service uses a Conda environment to run a python instance.</p>
 </dd>
 </dl>
-<p>Run the HTTP server by running the http_server.service file shown below. Run it with systemctl http_server start.</p>
+<p>Run the HTTP server by running the http_logger.service file shown below. Run it with <cite>systemctl http_logger start</cite>.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
 <span class="go">Description=HTTP Logger Server</span>
 <span class="go">After=multi-user.target</span>
@@ -135,7 +139,7 @@ This describes the host address, port number, and the number of workers.</p>
 <span class="go">[Service]</span>
 <span class="go">Type=simple</span>
 <span class="go">Restart=always</span>
-<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/zmq_server.py</span>
+<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py</span>
 
 <span class="go">[Install]</span>
 <span class="go">WantedBy=multi-user.target</span>
@@ -145,9 +149,9 @@ This describes the host address, port number, and the number of workers.</p>
 required to run the servers.</p>
 <a class="reference internal image-reference" href="_images/server_cfg.png"><img alt="Alternative text" src="_images/server_cfg.png" style="width: 300px;" /></a>
 <p>The parameter <code class="docutils literal notranslate"><span class="pre">nworkers</span></code> represent the number of workers used.
-The ideal amount of workers matches the maximul number of threads available to the server.</p>
+The ideal amount of workers matches the maximum number of threads available to the server.</p>
 <p>Check that the server is working with the curl statement to get a dump of one log.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl http://XX.XX.XX.XX:XXXX/api/log/get_log?n_logs=1</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl http://XX.XX.XX.XX:XXXX/api/log/get_logs?n_logs=1</span>
 </pre></div>
 </div>
 <p>If you do not see logs, check that the MongoDB service is running with the command <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">mongod</span> <span class="pre">.</span></code></p>

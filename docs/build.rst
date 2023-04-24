@@ -81,7 +81,9 @@ This describes the host address, port number, and the number of workers.
 Deployment
 ----------
 
-Simply running the command python zmq_server.py starts the server. To run it as a daemon, use the Linux process manager Systemd. Scripts are run as daemons and restarted should they unexpectedly exit. Systemd configuration files are stored in /etc/systemd/system/zmq_server.service, shown below. Using the dsibld account create the file below.
+Simply running the command python zmq_server.py starts the server. To run it as a daemon, use the Linux process manager Systemd.
+ Scripts are run as daemons and restarted should they unexpectedly exit. Systemd configuration files are stored in /etc/systemd/system/zmq_logger.service, 
+ shown below. Using the dsibld account create the file below.
 
 .. code-block::  console 
 
@@ -92,14 +94,14 @@ Simply running the command python zmq_server.py starts the server. To run it as 
     [Service]
     Type=simple
     Restart=always
-    ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/zmq_server.py
+    ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py
     [Install]
     WantedBy=multi-user.target
 
-You can start, stop, and check the status of the daemon with the command systemctl start/stop/status zmq_server
+You can start, stop, and check the status of the daemon with the command `systemctl start/stop/status zmq_logger`
  Note how the service uses a Conda environment to run a python instance.
 
-Run the HTTP server by running the http_server.service file shown below. Run it with systemctl http_server start. 
+Run the HTTP server by running the http_logger.service file shown below. Run it with `systemctl http_logger start`. 
 
 .. code-block::  console 
 
@@ -110,7 +112,7 @@ Run the HTTP server by running the http_server.service file shown below. Run it 
     [Service]
     Type=simple
     Restart=always
-    ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/zmq_server.py
+    ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py
 
     [Install]
     WantedBy=multi-user.target
@@ -125,7 +127,7 @@ required to run the servers.
   :alt: Alternative text
 
 The parameter ``nworkers`` represent the number of workers used. 
-The ideal amount of workers matches the maximul number of threads available to the server. 
+The ideal amount of workers matches the maximum number of threads available to the server. 
 
  
 
@@ -133,7 +135,7 @@ Check that the server is working with the curl statement to get a dump of one lo
 
 .. code-block::  console 
 
-   curl http://XX.XX.XX.XX:XXXX/api/log/get_log?n_logs=1
+   curl http://XX.XX.XX.XX:XXXX/api/log/get_logs?n_logs=1
 
 If you do not see logs, check that the MongoDB service is running with the command ``sudo systemctl status mongod .``
 
@@ -410,7 +412,7 @@ This will still enable logging to stdout and to a file.
 
 
 .. code-block::  python 
-  
+
   def create_logger(subsystem, configLoc, author, progid, semid, fileName):
       formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
       #zmq_log_handler = dl.ZMQHandler(subsystem, configLoc, author, progid, semid)
