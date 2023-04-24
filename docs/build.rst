@@ -73,7 +73,9 @@ This describes the host address, port number, and the number of workers.
 2. Using the dsirun account, set the python VE to loggerwith the command conda activate logger. If the logger does env does not exist, the command conda create --name logger python=3.9 creates the environment.
 
 3. The server is deployed by first installing the libraries described in the requirements.txt file with the following pip command.
+
 .. code-block::  console 
+
    pip -e requirements.txt
 
 Deployment
@@ -387,10 +389,10 @@ The initial handshake with the server probably went wrong. Upon first connection
 the client requests the server to send back metadata (2 lists, comprising valid levels and subsystems). 
 Without this handshake, it is impossible to run the logger. 
 
-- Check that the config file’s URL and port match the server.
+- Check that the config file URL and port match the server.
 
 - Is the server running? Check that the server is running on vm-ddoilogger with the command 
-``sudo systemctl status zmq_logger`` using the dsirun account.
+  ``sudo systemctl status zmq_logger`` using the dsirun account.
   
 
 **Logs are not making it to the database:** 
@@ -408,6 +410,7 @@ This will still enable logging to stdout and to a file.
 
 
 .. code-block::  python 
+  
   def create_logger(subsystem, configLoc, author, progid, semid, fileName):
       formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
       #zmq_log_handler = dl.ZMQHandler(subsystem, configLoc, author, progid, semid)

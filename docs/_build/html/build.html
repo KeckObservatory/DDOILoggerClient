@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Logger Server and Client Deployment &#8212; DDOILoggerClient 0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,7 +14,6 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API" href="api.html" />
@@ -102,12 +101,11 @@ This describes the host address, port number, and the number of workers.</p>
 <ol class="arabic simple">
 <li><p>Clone the server to the directory /ddoi</p></li>
 <li><p>Using the dsirun account, set the python VE to loggerwith the command conda activate logger. If the logger does env does not exist, the command conda create –name logger python=3.9 creates the environment.</p></li>
+<li><p>The server is deployed by first installing the libraries described in the requirements.txt file with the following pip command.</p></li>
 </ol>
-<p>3. The server is deployed by first installing the libraries described in the requirements.txt file with the following pip command.
-.. code-block::  console</p>
-<blockquote>
-<div><p>pip -e requirements.txt</p>
-</div></blockquote>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip -e requirements.txt</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="deployment">
@@ -341,10 +339,10 @@ The initial handshake with the server probably went wrong. Upon first connection
 the client requests the server to send back metadata (2 lists, comprising valid levels and subsystems).
 Without this handshake, it is impossible to run the logger.</p>
 <ul class="simple">
-<li><p>Check that the config file’s URL and port match the server.</p></li>
-<li><p>Is the server running? Check that the server is running on vm-ddoilogger with the command</p></li>
+<li><p>Check that the config file URL and port match the server.</p></li>
+<li><p>Is the server running? Check that the server is running on vm-ddoilogger with the command
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">zmq_logger</span></code> using the dsirun account.</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">zmq_logger</span></code> using the dsirun account.</p>
 <p><strong>Logs are not making it to the database:</strong>
 The Server may be down. The logs sent are stored by the client in a queue and are dispatched when the server reconnects.</p>
 <ul class="simple">
@@ -356,6 +354,21 @@ In the event that the troubleshooting process does not resolve the problem,
 it is possible to disable the ZMQHandler class, which disables logging into the server.
 In the example.py script comment out zmq_log_handler and logger.addHandler(zmq_log_handler).
 This will still enable logging to stdout and to a file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_logger</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="n">configLoc</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">progid</span><span class="p">,</span> <span class="n">semid</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1">#zmq_log_handler = dl.ZMQHandler(subsystem, configLoc, author, progid, semid)</span>
+    <span class="n">ch</span> <span class="o">=</span> <span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">fl</span> <span class="o">=</span> <span class="n">FileHandler</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+    <span class="n">fl</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+    <span class="c1">#logger.addHandler(zmq_log_handler)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logger</span>
+</pre></div>
+</div>
 </section>
 <section id="change-procedure">
 <h2>Change Procedure<a class="headerlink" href="#change-procedure" title="Permalink to this heading">¶</a></h2>
@@ -454,7 +467,7 @@ When in doubt of change make a branch instead of overwriting a currently working
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Tyler Tucker.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>
