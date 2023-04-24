@@ -137,7 +137,7 @@ Check that the server is working with the curl statement to get a dump of one lo
 
    curl http://XX.XX.XX.XX:XXXX/api/log/get_logs?n_logs=1
 
-If you do not see logs, check that the MongoDB service is running with the command ``sudo systemctl status mongod .``
+If you do not see logs, check that the MongoDB service is running with the command ``sudo systemctl status mongod``
 
 You should see something similar to the output below.
 
