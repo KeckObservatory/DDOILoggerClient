@@ -154,7 +154,7 @@ The ideal amount of workers matches the maximum number of threads available to t
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl http://XX.XX.XX.XX:XXXX/api/log/get_logs?n_logs=1</span>
 </pre></div>
 </div>
-<p>If you do not see logs, check that the MongoDB service is running with the command <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">mongod</span> <span class="pre">.</span></code></p>
+<p>If you do not see logs, check that the MongoDB service is running with the command <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">mongod</span></code></p>
 <p>You should see something similar to the output below.</p>
 <a class="reference internal image-reference" href="_images/systemctl_status.png"><img alt="Alternative text" src="_images/systemctl_status.png" style="width: 600px;" /></a>
 <p>If that works and you still are not seeing any longs, run the mongosh utility. If it is running and you are not receiving any logs, check the database directly.</p>
