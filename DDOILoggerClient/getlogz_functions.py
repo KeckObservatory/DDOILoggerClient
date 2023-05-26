@@ -4,6 +4,17 @@ import json
 import zmq
 from datetime import datetime, timedelta
 import os
+import configparser
+
+def get_default_config_loc(dev=False):
+    if dev:
+        config_loc = os.path.abspath(os.path.dirname(__file__))
+    else:
+        # .sin substitution comes from Makefile
+        config_loc = '@CFGDIR@'
+
+    config_loc = os.path.join(config_loc, 'logger_cfg.ini')
+    return config_loc
 
 def format_log_params(subsystem=None, startDate=None, endDate=None, nLogs=None, dateFormat=None):
     params = {} 
@@ -30,15 +41,6 @@ def get_last_n_minutes_logs(subsystem, minutes, endDate=None, dateFormat=None):
     params = format_log_params(subsystem, startDateStr, endDateStr, dateFormat=dateFormat)
     return params
     
-def get_default_config_loc(dev=False):
-    if dev:
-        config_loc = os.path.abspath(os.path.dirname(__file__))
-    else:
-        # .sin substitution comes from Makefile
-        config_loc = '@CFGDIR@'
-
-    config_loc = os.path.join(config_loc, 'logger_cfg.ini')
-    return config_loc
 
 def print_ouput_json_table(logs):
     excl = [ 'utc_sent' ]
@@ -78,7 +80,18 @@ def str_2_bool(val):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected')
 
-def get_logz(url, subsystem, minutes, startDate, endDate, nLogs, dateFormat):
+def get_url():
+    dev = False 
+    config_loc = get_default_config_loc(dev)
+    config_parser = configparser.ConfigParser()
+    config_parser.read(config_loc)
+    server = 'ZMQ_LOGGING_SERVER' if not dev else 'LOCAL_ZMQ_LOGGING_SERVER'
+    config = config_parser[server]
+    url = config.get('url')
+    return url 
+
+def get_logz(subsystem, minutes, startDate, endDate, nLogs, dateFormat):
+    url = get_url()
     socket, poll = init_zmq(url)
     if minutes:
         reqParams = get_last_n_minutes_logs(subsystem, minutes, endDate)

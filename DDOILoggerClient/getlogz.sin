@@ -1,7 +1,6 @@
 #! @PYTHON3@
 import argparse 
 import sys
-import configparser
 from getlogz_functions import * 
 
 
@@ -23,15 +22,7 @@ if __name__ == '__main__':
                          help="set to true if working locally")
 
     args = parser.parse_args()
-    dev = args.dev
 
-    config_loc = get_default_config_loc(dev)
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_loc)
-    server = 'ZMQ_LOGGING_SERVER' if not dev else 'LOCAL_ZMQ_LOGGING_SERVER'
-    config = config_parser[server]
-    url = config.get('url')
-
-    logs = get_logz(url, args.subsystem, args.minutes, args.startDate, args.endDate, args.nLogs, args.dateFormat )
+    logs = get_logz(args.subsystem, args.minutes, args.startDate, args.endDate, args.nLogs, args.dateFormat )
     print_ouput_json_table(logs)
     sys.exit()
