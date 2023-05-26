@@ -1,14 +1,11 @@
 #! @PYTHON3@
-import pdb
 import argparse 
 import json
 import zmq
-import sys
 from datetime import datetime, timedelta
 import os
-import configparser
 
-def get_logs(subsystem=None, startDate=None, endDate=None, nLogs=None, dateFormat=None):
+def format_log_params(subsystem=None, startDate=None, endDate=None, nLogs=None, dateFormat=None):
     params = {} 
     if startDate:
         params['startDate'] = startDate 
@@ -22,7 +19,6 @@ def get_logs(subsystem=None, startDate=None, endDate=None, nLogs=None, dateForma
         params['dateFormat'] = dateFormat 
     return params 
 
-
 def get_last_n_minutes_logs(subsystem, minutes, endDate=None, dateFormat=None):
     if not endDate:
         endDate = datetime.utcnow()
@@ -31,7 +27,7 @@ def get_last_n_minutes_logs(subsystem, minutes, endDate=None, dateFormat=None):
     startDate = endDate - timedelta(minutes=minutes)
     startDateStr = datetime.strftime(startDate, dateFormat)
     endDateStr = datetime.strftime(endDate, dateFormat)
-    params = get_logs(subsystem, startDateStr, endDateStr, dateFormat=dateFormat)
+    params = format_log_params(subsystem, startDateStr, endDateStr, dateFormat=dateFormat)
     return params
     
 def get_default_config_loc(dev=False):
@@ -82,46 +78,16 @@ def str_2_bool(val):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected')
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Get logs from logger database")
-    parser.add_argument('--subsystem', type=str, required=False, default=None,
-                         help="subsystem specific logs")
-    parser.add_argument('--startDate', type=str, required=False, default=None,
-                         help="starting date to retrieve logs")
-    parser.add_argument('--endDate', type=str, required=False, default=None,
-                         help="ending date to retrieve logs")
-    parser.add_argument('--nLogs', type=int, required=False, default=100,
-                         help="maximum number of logs to output")
-    parser.add_argument('--minutes', type=int, required=False, default=None,
-                         help="set to retrieve last n minutes of logs")
-    parser.add_argument('--dateFormat', type=str, required=False, default='%Y-%m-%dT%H:%M:%S',
-                         help="how the dates are formatted (default is YYYY-mm-ddTHH:MM:SS)")
-    parser.add_argument('--dev', type=str_2_bool, required=False, default=False,
-                         help="set to true if working locally")
-
-    args = parser.parse_args()
-    dev = args.dev
-
-    config_loc = get_default_config_loc(dev)
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_loc)
-    server = 'ZMQ_LOGGING_SERVER' if not dev else 'LOCAL_ZMQ_LOGGING_SERVER'
-    config = config_parser[server]
-    url = config.get('url')
-
+def get_logz(url, subsystem, minutes, startDate, endDate, nLogs, dateFormat):
     socket, poll = init_zmq(url)
-
-    if args.minutes:
-        reqParams = get_last_n_minutes_logs(args.subsystem, args.minutes, args.endDate)
+    if minutes:
+        reqParams = get_last_n_minutes_logs(subsystem, minutes, endDate)
     else:
-        reqParams = get_logs(subsystem=args.subsystem, startDate=args.startDate, endDate=args.endDate, nLogs=args.nLogs, dateFormat=args.dateFormat)
-
+        reqParams = format_log_params(subsystem=subsystem, startDate=startDate, endDate=endDate, nLogs=nLogs, dateFormat=dateFormat)
     msg = {'msg_type': 'request_logs', 'body': reqParams}
     socket.send_string(json.dumps(msg)) #  zeromq method is faster
-
     sockets = dict(poll.poll(5000))
     resp = json.loads(socket.recv()) if socket in sockets else {}
     assert resp.get('resp', False) == 200, f"logs not recieved: {resp.get('msg', 'no msg found')}"
     logs = resp.get('msg')
-    print_ouput_json_table(logs)
-    sys.exit()
+    return logs
