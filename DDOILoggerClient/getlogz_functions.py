@@ -72,7 +72,7 @@ def str_2_bool(val):
 def get_logz(url, subsystem, minutes, startDate, endDate, nLogs, dateFormat):
     socket, poll = init_zmq(url)
     if minutes:
-        reqParams = get_last_n_minutes_logs(subsystem, minutes, endDate)
+        reqParams = get_last_n_minutes_logs(subsystem, minutes, endDate, dateFormat)
     else:
         reqParams = format_log_params(subsystem=subsystem, startDate=startDate, endDate=endDate, nLogs=nLogs, dateFormat=dateFormat)
     msg = {'msg_type': 'request_logs', 'body': reqParams}
