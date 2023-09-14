@@ -262,8 +262,8 @@ class ServerInterface():
     def _init_zmq(self):
         context = zmq.Context()
         self.socket = context.socket(zmq.DEALER)
-        nowInt = int(datetime.now())
-        identity = f"{self.subsystem}-{os.getpid()-{nowInt}}"
+        now = datetime.now().strftime('%Y%m%dT%H%M%S%Z'),
+        identity = f"{self.subsystem}-{os.getpid()}-{now}"
         self.socket.identity = identity.encode('ascii')
         self.socket.connect(self.config['url'])
         print('Client %s started' % (identity))
