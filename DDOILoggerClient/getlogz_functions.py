@@ -4,32 +4,21 @@ import json
 import zmq
 from datetime import datetime, timedelta
 
-
-def format_log_params(subsystem=None, startDate=None, endDate=None, nLogs=None, dateFormat=None):
-    params = {} 
-    if startDate:
-        params['startDate'] = startDate 
-    if endDate:
-        params['endDate'] = endDate 
-    if subsystem:
-        params['subsystem'] = subsystem 
-    if nLogs:
-        params['nLogs'] = nLogs 
-    if dateFormat:
-        params['dateFormat'] = dateFormat 
-    return params 
-
-def get_last_n_minutes_logs(subsystem, minutes, endDate=None, dateFormat=None):
+def get_last_n_minutes_logs(minutes, **kwargs):
     if not endDate:
         endDate = datetime.utcnow()
     else:
+        dateFormat = kwargs.get('dateFormat')
         endDate = datetime.strptime(endDate, dateFormat)
     startDate = endDate - timedelta(minutes=minutes)
     startDateStr = datetime.strftime(startDate, dateFormat)
     endDateStr = datetime.strftime(endDate, dateFormat)
-    params = format_log_params(subsystem, startDateStr, endDateStr, dateFormat=dateFormat)
-    return params
-    
+    return {
+        'startDate': startDateStr, 
+        'endDate': endDateStr, 
+        'dateFormat': dateFormat, 
+        **kwargs
+        }
 
 def print_ouput_json_table(logs):
     excl = [ 'utc_sent' ]
@@ -48,8 +37,6 @@ def print_ouput_json_table(logs):
                 row.append(val)
                 continue
         print("\t ".join(row))
-                
-        # print(', '.join([str(x) for x in log.values()]))
 
 def init_zmq(url):
     context = zmq.Context()
@@ -69,13 +56,13 @@ def str_2_bool(val):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected')
 
-def get_logz(url, subsystem, minutes, startDate, endDate, nLogs, dateFormat):
+def get_logz(url, minutes, **kwargs):
     socket, poll = init_zmq(url)
     if minutes:
-        reqParams = get_last_n_minutes_logs(subsystem, minutes, endDate, dateFormat)
+        params = get_last_n_minutes_logs(minutes, **kwargs)
     else:
-        reqParams = format_log_params(subsystem=subsystem, startDate=startDate, endDate=endDate, nLogs=nLogs, dateFormat=dateFormat)
-    msg = {'msg_type': 'request_logs', 'body': reqParams}
+        params = kwargs 
+    msg = {'msg_type': 'request_logs', 'body': params}
     socket.send_string(json.dumps(msg)) #  zeromq method is faster
     sockets = dict(poll.poll(5000))
     resp = json.loads(socket.recv()) if socket in sockets else {}
