@@ -1,9 +1,7 @@
-import configparser
 import pdb
 import json
 from pymongo import MongoClient
 import zmq
-import os
 import sys
 from datetime import datetime
 import logging 
@@ -15,13 +13,13 @@ from DDOILogger import ZMQHandler
 # from DDOILoggerClient import DDOILogger as dl 
 
 
-def get_mongodb():
+def get_mongodb(db_name):
     client = MongoClient(port = 27017)
-    return client['logs'] 
+    return client[db_name] 
 
-def create_logger(subsystem, configLoc, author, progid, semid, fileName):
+def create_logger(url, configLoc, subsystem, author, progid, semid, fileName):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    zmq_log_handler = ZMQHandler(subsystem, configLoc, author, progid, semid)
+    zmq_log_handler = ZMQHandler(url, configLoc, **{'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid})
     ch = StreamHandler()
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
@@ -33,29 +31,16 @@ def create_logger(subsystem, configLoc, author, progid, semid, fileName):
     logger.addHandler(fl)
     return logger
 
-def init_logger():
+def init_logger(url):
     subsystem='MOSFIRE'
     configLoc= None 
     author="ttucker"
     progid="2022B"
     semid="1234"
     fileName = "stress_test.log"
-    logger = create_logger(subsystem, configLoc, author, progid, semid, fileName)
+    logger = create_logger(url, configLoc, subsystem, author, progid, semid, fileName)
     return logger
 
-def get_logs(subsystem=None, startDate=None, endDate=None, nLogs=None, dateFormat=None):
-    params = {} 
-    if startDate:
-        params['startDate'] = startDate 
-    if endDate:
-        params['endDate'] = endDate 
-    if subsystem:
-        params['subsystem'] = subsystem 
-    if nLogs:
-        params['nLogs'] = nLogs 
-    if dateFormat:
-        params['dateFormat'] = dateFormat 
-    return params 
 
 def init_zmq(url):
     context = zmq.Context()
@@ -66,9 +51,9 @@ def init_zmq(url):
     return socket, poll
 
 if __name__=='__main__':
-    logger = init_logger()
-    db = get_mongodb()
+    db = get_mongodb('logs')
     url="tcp://localhost:5570"
+    logger = init_logger(url)
     # url="tcp://10.95.1.94:5570"
     socket, poll = init_zmq(url)
     counter = 0
@@ -79,7 +64,7 @@ if __name__=='__main__':
         sleep(.1)
 
         # request message with zeromq
-        reqParams = get_logs(nLogs=1)
+        reqParams = {'nLogs': 1}
         request = {'msg_type': 'request_logs', 'body': reqParams}
         socket.send_string(json.dumps(request)) #  zeromq method is faster
         sockets = dict(poll.poll(5000))
