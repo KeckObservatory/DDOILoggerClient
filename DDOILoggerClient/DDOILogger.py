@@ -15,9 +15,18 @@ class ZMQHandler(StreamHandler):
         StreamHandler (_type_): _description_
     """
 
-    def __init__(self, url=None, configLoc=None, **kwargs):
+    def __init__(self, url=None, config=None, **kwargs):
         StreamHandler.__init__(self)
-        self.zmq_client_logger = DDOILogger(url, configLoc, **kwargs)
+
+        if config is None:
+            configLoc = self._get_default_config_loc()
+            config = configparser.ConfigParser()
+            config.read(configLoc)
+            config = dict(config)
+
+        self.logSchema = [*config['LOG_SCHEMA']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
+                    *config['LOG_SCHEMA']['LOG_SCHEMA'].replace(' ', '').split(',') ]
+        self.zmq_client_logger = DDOILogger(url, config, **kwargs)
 
     def emit(self, record):
         msg = self.format(record)
@@ -25,7 +34,7 @@ class ZMQHandler(StreamHandler):
         try:
             msg = json.loads(msg)
             text = msg.get('msg', "")
-            self.zmq_client_logger.send_log(text, kwargs=msg)
+            self.zmq_client_logger.send_log(text, self.logSchema, kwargs=msg)
         except JSONDecodeError as err:
             pass
 
@@ -35,24 +44,16 @@ class DDOILogger():
     """Module that is used to log DDOI messages.
     
     """
-    def __init__(self, url, configLoc=None, **kwargs):
+    def __init__(self, url, logSchema=None, **kwargs):
         """Constructor function for the DDOI logger
         """
 
         # Open the config file
         self.DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%Z'
-        if configLoc is None:
-            configLoc = self._get_default_config_loc()
-        config_parser = configparser.ConfigParser()
-        config_parser.read(configLoc)
-        self.config = config_parser
         self.server_interface = ServerInterface(url, idName=kwargs.get('subsystem', 'unknown'))
         self.kwargs = kwargs
 
-    def send_log(self, message, sendAck=True, **kwargs):
-    #def send_log(self, *args, **kwargs):
-        logSchema = [*self.config['log_schema']['log_schema_base'].replace(' ', '').split(','),
-                     *self.config['log_schema']['log_schema'].replace(' ', '').split(',') ]
+    def send_log(self, message, logSchema, sendAck=True, **kwargs):
 
         log = dict()
         for key in logSchema:

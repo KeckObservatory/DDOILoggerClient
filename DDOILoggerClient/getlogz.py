@@ -19,7 +19,7 @@ def get_default_config_loc(dev=False):
 def get_url(config_parser):
     server = 'ZMQ_LOGGING_SERVER' if not dev else 'LOCAL_ZMQ_LOGGING_SERVER'
     config = config_parser[server]
-    url = config.get('url')
+    url = config.get('URL')
     return url 
 
 if __name__ == '__main__':
@@ -29,10 +29,10 @@ if __name__ == '__main__':
     config_parser.read(config_loc)
     parser = argparse.ArgumentParser(description="Get logs from logger database")
 
-    for key in [*config_parser['arg_required_keys'] *config_parser['arg_keys']]:
-        argType = config_parser['arg_types'][key]
-        argHelp = config_parser['arg_help'].get(key, None)
-        argDefault = config_parser['arg_defaults'].get(key, None)
+    for key in [*config_parser['ARG_REQUIRED_KEYS'], *config_parser['ARG_KEYS']]:
+        argType = config_parser['ARG_TYPES'][key]
+        argHelp = config_parser['ARG_HELP'].get(key, None)
+        argDefault = config_parser['ARG_DEFAULTS'].get(key, None)
         parser.add_arguement(f"--{key}", 
                              type=getattr(__builtins__, argType), 
                              default=argDefault,
