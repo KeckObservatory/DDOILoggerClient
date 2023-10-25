@@ -15,7 +15,7 @@ class ZMQHandler(StreamHandler):
         StreamHandler (_type_): _description_
     """
 
-    def __init__(self, url=None, config=None, **kwargs):
+    def __init__(self, url, config=None, **kwargs):
         StreamHandler.__init__(self)
 
         if config is None:
