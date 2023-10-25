@@ -1,6 +1,8 @@
 import pdb
+import os
 import json
 from pymongo import MongoClient
+import configparser
 import zmq
 import sys
 from datetime import datetime
@@ -17,9 +19,9 @@ def get_mongodb(db_name):
     client = MongoClient(port = 27017)
     return client[db_name] 
 
-def create_logger(url, configLoc, subsystem, author, progid, semid, fileName):
+def create_logger(url, config, subsystem, author, progid, semid, fileName):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    zmq_log_handler = ZMQHandler(url, configLoc, **{'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid})
+    zmq_log_handler = ZMQHandler(url, config, **{'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid})
     ch = StreamHandler()
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
@@ -33,12 +35,15 @@ def create_logger(url, configLoc, subsystem, author, progid, semid, fileName):
 
 def init_logger(url):
     subsystem='MOSFIRE'
-    configLoc= None 
+    config_parser = configparser.ConfigParser()
+    config_loc = os.path.join(os.getcwd(), 'logger_cfg.ini')
+    config_parser.read(config_loc)
+    config = dict(config_parser)
     author="ttucker"
     progid="2022B"
     semid="1234"
     fileName = "stress_test.log"
-    logger = create_logger(url, configLoc, subsystem, author, progid, semid, fileName)
+    logger = create_logger(url, config, subsystem, author, progid, semid, fileName)
     return logger
 
 

@@ -21,16 +21,20 @@ url = "tcp://localhost:5570"
 config_parser = configparser.ConfigParser()
 
 config_loc = os.path.join(os.getcwd(), 'logger_cfg.ini')
+config_parser.read(config_loc)
+config = dict(config_parser)
 
 @pytest.mark.client
 def test_logger_client():
 
-    logger = DDOILogger(url, config_loc, subsystem=subsystem, author=author, progid=progid, semid=semid)
+    logger = DDOILogger(url, subsystem=subsystem, author=author, progid=progid, semid=semid)
     alive = logger.server_interface._check_cfg_url_alive()
     assert alive, 'heartbeat failing'
 
+    logSchema = [*config['LOG_SCHEMA']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
+                *config['LOG_SCHEMA']['LOG_SCHEMA'].replace(' ', '').split(',') ]
     msg = 'test msg'
-    ack = logger.send_log(message=msg)
+    ack = logger.send_log(message=msg, logSchema=logSchema)
     resp = ack.get('resp', 400)
     msg = ack.get('msg', None)
     assert resp == 200, 'message not sent'
