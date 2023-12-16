@@ -26,6 +26,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="api.html" title="API"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -82,8 +85,8 @@ The software design document describing form, function, and requirements is foun
 <h3>Server<a class="headerlink" href="#server" title="Permalink to this heading">¶</a></h3>
 <p>The server vm-ddoilogger’s ip address is 10.95.1.94 and runs using:</p>
 <p><strong>dsibld</strong> - clones GIT repository, build directories, runs systemctl commands.
-Note that systemctl runs scripts as root.</p>
-<p><strong>dsirun</strong> - handles the python environment. Builds the virtual environment, installs libraries, etc.</p>
+Note that systemctl runs scripts as root. DSI bld also handles the python environment
+in /usr/local/anaconda3/bin/python3, installs libraries, etc.</p>
 <p><strong>Assumptions: This document assumes that you have MongoDB and conda/pip (Python 3) installed on the
 machine that is running ZMQ.</strong></p>
 </section>
@@ -103,7 +106,7 @@ This describes the host address, port number, and the number of workers.</p>
 <li><p>Using the dsirun account, set the python VE to loggerwith the command conda activate logger. If the logger does env does not exist, the command conda create –name logger python=3.9 creates the environment.</p></li>
 <li><p>The server is deployed by first installing the libraries described in the requirements.txt file with the following pip command.</p></li>
 </ol>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip -e requirements.txt</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo /usr/local/anaconda/bin/pip -e requirements.txt</span>
 </pre></div>
 </div>
 </section>
@@ -122,16 +125,16 @@ shown below. Using the dsibld account create the file below.</p>
 <span class="go">[Service]</span>
 <span class="go">Type=simple</span>
 <span class="go">Restart=always</span>
-<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py</span>
+<span class="go">ExecStart=/usr/local/anaconda/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py</span>
 <span class="go">[Install]</span>
 <span class="go">WantedBy=multi-user.target</span>
 </pre></div>
 </div>
 <dl class="simple">
-<dt>You can start, stop, and check the status of the daemon with the command <cite>systemctl start/stop/status zmq_logger</cite></dt><dd><p>Note how the service uses a Conda environment to run a python instance.</p>
+<dt>You can start, stop, and check the status of the daemon with the command <cite>sudo systemctl start/stop/status zmq_logger</cite></dt><dd><p>Note how the service uses a Conda environment to run a python instance.</p>
 </dd>
 </dl>
-<p>Run the HTTP server by running the http_logger.service file shown below. Run it with <cite>systemctl http_logger start</cite>.</p>
+<p>Run the HTTP server by running the http_logger.service file shown below. Run it with <cite>sudo systemctl http_logger start</cite>.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Unit]</span>
 <span class="go">Description=HTTP Logger Server</span>
 <span class="go">After=multi-user.target</span>
@@ -139,7 +142,7 @@ shown below. Using the dsibld account create the file below.</p>
 <span class="go">[Service]</span>
 <span class="go">Type=simple</span>
 <span class="go">Restart=always</span>
-<span class="go">ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py</span>
+<span class="go">ExecStart=/usr/local/anaconda/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py</span>
 
 <span class="go">[Install]</span>
 <span class="go">WantedBy=multi-user.target</span>
@@ -459,6 +462,9 @@ When in doubt of change make a branch instead of overwriting a currently working
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="api.html" title="API"
              >next</a> |</li>

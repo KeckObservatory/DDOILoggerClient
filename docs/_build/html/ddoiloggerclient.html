@@ -26,6 +26,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="build.html" title="Logger Server and Client Deployment"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -47,11 +50,66 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="ddoiloggerclient-ddoilogger-module">
-<h2>DDOILoggerClient.DDOILogger module<a class="headerlink" href="#ddoiloggerclient-ddoilogger-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-DDOILoggerClient.DDOILogger">
+<span id="ddoiloggerclient-ddoilogger-module"></span><h2>DDOILoggerClient.DDOILogger module<a class="headerlink" href="#module-DDOILoggerClient.DDOILogger" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="DDOILoggerClient.DDOILogger.DDOILogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DDOILoggerClient.DDOILogger.</span></span><span class="sig-name descname"><span class="pre">DDOILogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logSchema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDOILoggerClient.DDOILogger.DDOILogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Module that is used to log DDOI messages.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="DDOILoggerClient.DDOILogger.DDOILogger.handle_response">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./failedLogs.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDOILoggerClient.DDOILogger.DDOILogger.handle_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>sends failed logs to local storage to be ingested later</p>
+<dl class="simple">
+<dt>resp<span class="classifier">dict </span></dt><dd><p>response from logger server</p>
+</dd>
+<dt>log<span class="classifier">dict </span></dt><dd><p>the msg sent to the logger server</p>
+</dd>
+<dt>path<span class="classifier">str</span></dt><dd><p>path to write log files</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDOILoggerClient.DDOILogger.DDOILogger.send_log">
+<span class="sig-name descname"><span class="pre">send_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logSchema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sendAck</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDOILoggerClient.DDOILogger.DDOILogger.send_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DDOILoggerClient.DDOILogger.ServerInterface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DDOILoggerClient.DDOILogger.</span></span><span class="sig-name descname"><span class="pre">ServerInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poll_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDOILoggerClient.DDOILogger.ServerInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ZeroMQ client that interfaces with the server</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DDOILoggerClient.DDOILogger.ZMQHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DDOILoggerClient.DDOILogger.</span></span><span class="sig-name descname"><span class="pre">ZMQHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDOILoggerClient.DDOILogger.ZMQHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StreamHandler</span></code></p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>StreamHandler (_type_): _description_</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="DDOILoggerClient.DDOILogger.ZMQHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDOILoggerClient.DDOILogger.ZMQHandler.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emit a record.</p>
+<p>If a formatter is specified, it is used to format the record.
+The record is then written to the stream with a trailing newline.  If
+exception information is present, it is formatted using
+traceback.print_exception and appended to the stream.  If the stream
+has an ‘encoding’ attribute, it is used to determine how to do the
+output to the stream.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
+<section id="module-DDOILoggerClient">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DDOILoggerClient" title="Permalink to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -70,8 +128,8 @@
     <ul>
 <li><a class="reference internal" href="#">DDOILoggerClient package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#ddoiloggerclient-ddoilogger-module">DDOILoggerClient.DDOILogger module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-DDOILoggerClient.DDOILogger">DDOILoggerClient.DDOILogger module</a></li>
+<li><a class="reference internal" href="#module-DDOILoggerClient">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -114,6 +172,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="build.html" title="Logger Server and Client Deployment"
              >next</a> |</li>

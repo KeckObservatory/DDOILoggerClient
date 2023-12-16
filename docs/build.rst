@@ -47,9 +47,8 @@ Server
 The server vm-ddoilogger's ip address is 10.95.1.94 and runs using:
 
 **dsibld** - clones GIT repository, build directories, runs systemctl commands. 
-Note that systemctl runs scripts as root. 
-
-**dsirun** - handles the python environment. Builds the virtual environment, installs libraries, etc. 
+Note that systemctl runs scripts as root. DSI bld also handles the python environment
+in /usr/local/anaconda3/bin/python3, installs libraries, etc.
 
 **Assumptions: This document assumes that you have MongoDB and conda/pip (Python 3) installed on the 
 machine that is running ZMQ.**
@@ -76,7 +75,7 @@ This describes the host address, port number, and the number of workers.
 
 .. code-block::  console 
 
-   pip -e requirements.txt
+  sudo /usr/local/anaconda/bin/pip -e requirements.txt
 
 Deployment
 ----------
@@ -94,14 +93,14 @@ Simply running the command python zmq_server.py starts the server. To run it as 
     [Service]
     Type=simple
     Restart=always
-    ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py
+    ExecStart=/usr/local/anaconda/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py
     [Install]
     WantedBy=multi-user.target
 
-You can start, stop, and check the status of the daemon with the command `systemctl start/stop/status zmq_logger`
+You can start, stop, and check the status of the daemon with the command `sudo systemctl start/stop/status zmq_logger`
  Note how the service uses a Conda environment to run a python instance.
 
-Run the HTTP server by running the http_logger.service file shown below. Run it with `systemctl http_logger start`. 
+Run the HTTP server by running the http_logger.service file shown below. Run it with `sudo systemctl http_logger start`. 
 
 .. code-block::  console 
 
@@ -112,7 +111,7 @@ Run the HTTP server by running the http_logger.service file shown below. Run it 
     [Service]
     Type=simple
     Restart=always
-    ExecStart=/home/dsieng/.conda/envs/logger/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py
+    ExecStart=/usr/local/anaconda/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py
 
     [Install]
     WantedBy=multi-user.target

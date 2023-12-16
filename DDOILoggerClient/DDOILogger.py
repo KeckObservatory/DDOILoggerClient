@@ -17,6 +17,7 @@ class ZMQHandler(StreamHandler):
 
     def __init__(self, url, config=None, **kwargs):
         StreamHandler.__init__(self)
+        self.set_name('ZMQHandler')
 
         if config is None:
             configLoc = self._get_default_config_loc()
@@ -24,8 +25,8 @@ class ZMQHandler(StreamHandler):
             config.read(configLoc)
             config = dict(config)
 
-        self.logSchema = [*config['LOG_SCHEMA']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
-                    *config['LOG_SCHEMA']['LOG_SCHEMA'].replace(' ', '').split(',') ]
+        self.logSchema = [*config['LOGGER']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
+                    *config['LOGGER']['LOG_SCHEMA'].replace(' ', '').split(',') ]
         self.zmq_client_logger = DDOILogger(url, config, **kwargs)
 
     def emit(self, record):
