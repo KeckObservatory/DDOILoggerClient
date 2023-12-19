@@ -1,9 +1,7 @@
 from datetime import datetime
-
 import os
 import configparser
 import json
-from json import JSONDecodeError
 import zmq
 import pdb
 from logging import StreamHandler
@@ -15,7 +13,7 @@ class ZMQHandler(StreamHandler):
         StreamHandler (_type_): _description_
     """
 
-    def __init__(self, url, config=None, **kwargs):
+    def __init__(self, config=None, local=False, **kwargs):
         StreamHandler.__init__(self)
         self.set_name('ZMQHandler')
 
@@ -27,17 +25,16 @@ class ZMQHandler(StreamHandler):
 
         self.logSchema = [*config['LOGGER']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
                     *config['LOGGER']['LOG_SCHEMA'].replace(' ', '').split(',') ]
+        url = config['ZMQ_LOGGING_SERVER']['URL'] if not local else config['LOCAL_ZMQ_LOGGING_SERVER']['URL'] 
         self.zmq_client_logger = DDOILogger(url, config, **kwargs)
+    
+    def _get_default_config_loc(self):
+        config_loc = os.path.abspath(os.path.dirname(__file__))
+        config_loc = os.path.join(config_loc, './logger_cfg.ini')
+        return config_loc
 
     def emit(self, record):
-        msg = self.format(record)
-        msg = msg.replace('\'', '\"')
-        try:
-            msg = json.loads(msg)
-            text = msg.get('msg', "")
-            self.zmq_client_logger.send_log(text, self.logSchema, kwargs=msg)
-        except JSONDecodeError as err:
-            pass
+        self.zmq_client_logger.send_log(record.msg, self.logSchema, record=record)
 
 """Instantiable class for logging within the DDOI ecosystem
 """
@@ -51,46 +48,25 @@ class DDOILogger():
 
         # Open the config file
         self.DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%Z'
+        pdb.set_trace()
         self.server_interface = ServerInterface(url, idName=kwargs.get('subsystem', 'unknown'))
         self.kwargs = kwargs
 
-    def send_log(self, message, logSchema, sendAck=True, **kwargs):
+    def send_log(self, message, logSchema, sendAck=True, record=None):
 
         log = dict()
+        recordDict = record.__dict__ if record else dict() 
         for key in logSchema:
-            log[key] = kwargs[key] if kwargs.get(key, False) else self.kwargs.get(key, None)
+            log[key] = recordDict.get(key, self.kwargs.get(key, None))
         log['utc_sent'] = datetime.utcnow().strftime(self.kwargs.get('dateFormat', self.DATE_FORMAT))
         log['message'] = message
-        resp = json.loads(self.server_interface._send_log(log, sendAck))
-        return resp
+        resp = self.server_interface._send_log(log, sendAck)
+        return json.loads(resp)
     
     def _get_default_config_loc(self):
         config_loc = os.path.abspath(os.path.dirname(__file__))
         config_loc = os.path.join(config_loc, './logger_cfg.ini')
         return config_loc
-
-    @staticmethod
-    def handle_response(resp, log, path='./failedLogs.txt'):
-        """sends failed logs to local storage to be ingested later 
-
-        Parameters
-        ----------
-        resp : dict 
-            response from logger server 
-        log : dict 
-            the msg sent to the logger server 
-        path : str
-            path to write log files
-        """
-        try: 
-            if not resp.get('resp', None) == 200:
-                    
-                with open(path, 'a+') as f:
-                    msgResp = {'resp': resp, 'log': log}
-                    msgRespStr = json.dumps(msgResp) + '\r'
-                    f.write(msgRespStr)
-        except Exception as err:
-            print(f'handle_response error: {err}')
     
 class ServerInterface():
     """ZeroMQ client that interfaces with the server

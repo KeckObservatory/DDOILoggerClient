@@ -19,9 +19,9 @@ def get_mongodb(db_name):
     client = MongoClient(port = 27017)
     return client[db_name] 
 
-def create_logger(url, config, subsystem, author, progid, semid, fileName):
+def create_logger(config, subsystem, author, progid, semid, fileName):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    zmq_log_handler = ZMQHandler(url, config, **{'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid})
+    zmq_log_handler = ZMQHandler(config, **{'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid})
     ch = StreamHandler()
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
@@ -33,7 +33,7 @@ def create_logger(url, config, subsystem, author, progid, semid, fileName):
     logger.addHandler(fl)
     return logger
 
-def init_logger(url):
+def init_logger():
     subsystem='MOSFIRE'
     config_parser = configparser.ConfigParser()
     config_loc = os.path.join(os.getcwd(), 'logger_cfg.ini')
@@ -43,7 +43,7 @@ def init_logger(url):
     progid="2022B"
     semid="1234"
     fileName = "stress_test.log"
-    logger = create_logger(url, config, subsystem, author, progid, semid, fileName)
+    logger = create_logger(config, subsystem, author, progid, semid, fileName)
     return logger
 
 
@@ -58,7 +58,7 @@ def init_zmq(url):
 if __name__=='__main__':
     db = get_mongodb('logs')
     url="tcp://localhost:5570"
-    logger = init_logger(url)
+    logger = init_logger()
     # url="tcp://10.95.1.94:5570"
     socket, poll = init_zmq(url)
     counter = 0

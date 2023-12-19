@@ -7,7 +7,8 @@ import pdb
 
 def create_logger(subsystem, configLoc, author, progid, semid, fileName):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    zmq_log_handler = dl.ZMQHandler(subsystem, configLoc, author, progid, semid)
+    kwargs = {'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid}
+    zmq_log_handler = dl.ZMQHandler(configLoc, local=True, **kwargs)
     ch = StreamHandler()
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
@@ -29,4 +30,4 @@ if __name__=='__main__':
 
     logger = create_logger(subsystem, configLoc, author, progid, semid, fileName)
   
-    logger.warning({"msg": "logger handler test2", "level": "warning"})
+    logger.warning('test', extra={'subsystem': 'example subsystem', 'author': 'tyler'})
