@@ -48,7 +48,6 @@ class DDOILogger():
 
         # Open the config file
         self.DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%Z'
-        pdb.set_trace()
         self.server_interface = ServerInterface(url, idName=kwargs.get('subsystem', 'unknown'))
         self.kwargs = kwargs
 
