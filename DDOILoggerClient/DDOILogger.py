@@ -61,11 +61,16 @@ class DDOILogger():
         log['message'] = message
         if test:
             log['level'] = 'debug'
+            log['loggername'] = 'DDOI'
         else:
-            lvl = recordDict.get('levelname', self.kwargs.get('level', None)).lower()
+            lvl = recordDict.get('levelname', self.kwargs.get('level', None))
             if not lvl:
                 raise NotImplementedError('log level not specified')
-            log['level'] = lvl 
+            log['level'] = lvl.lower()
+            loggername = recordDict.get('loggername', self.kwargs.get('loggername', None))
+            if not loggername:
+                raise NotImplementedError('loggername not specified')
+            log['loggername'] = loggername.lower()
         resp = self.server_interface._send_log(log, sendAck)
         return json.loads(resp)
     

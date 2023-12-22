@@ -15,6 +15,7 @@ config=None
 author="ttucker"
 progid="2022B"
 semid="1234"
+loggername = 'DDOI'
 rs = 'test log' 
 
 url = "tcp://localhost:5570"
@@ -27,7 +28,7 @@ config = dict(config_parser)
 @pytest.mark.client
 def test_logger_client():
 
-    logger = DDOILogger(url, subsystem=subsystem, author=author, progid=progid, semid=semid)
+    logger = DDOILogger(url, subsystem=subsystem, author=author, progid=progid, semid=semid, loggername=loggername)
     alive = logger.server_interface._check_cfg_url_alive()
     assert alive, 'heartbeat failing'
 
