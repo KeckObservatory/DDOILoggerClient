@@ -65,7 +65,7 @@ if __name__=='__main__':
     while True:
         counter += 1
         msg = f"stress test timestamp: {datetime.timestamp(datetime.now())}"
-        logger.warning({"msg": msg, "level": "warning"})
+        logger.warning(msg)
         sleep(.1)
 
         # request message with zeromq

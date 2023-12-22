@@ -51,7 +51,7 @@ class DDOILogger():
         self.server_interface = ServerInterface(url, idName=kwargs.get('subsystem', 'unknown'))
         self.kwargs = kwargs
 
-    def send_log(self, message, logSchema, sendAck=True, record=None):
+    def send_log(self, message, logSchema, sendAck=True, record=None, test=False):
 
         log = dict()
         recordDict = record.__dict__ if record else dict() 
@@ -59,6 +59,13 @@ class DDOILogger():
             log[key] = recordDict.get(key, self.kwargs.get(key, None))
         log['utc_sent'] = datetime.utcnow().strftime(self.kwargs.get('dateFormat', self.DATE_FORMAT))
         log['message'] = message
+        if test:
+            log['level'] = 'debug'
+        else:
+            lvl = recordDict.get('levelname', self.kwargs.get('level', None)).lower()
+            if not lvl:
+                raise NotImplementedError('log level not specified')
+            log['level'] = lvl 
         resp = self.server_interface._send_log(log, sendAck)
         return json.loads(resp)
     

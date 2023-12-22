@@ -31,10 +31,10 @@ def test_logger_client():
     alive = logger.server_interface._check_cfg_url_alive()
     assert alive, 'heartbeat failing'
 
-    logSchema = [*config['LOG_SCHEMA']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
-                *config['LOG_SCHEMA']['LOG_SCHEMA'].replace(' ', '').split(',') ]
+    logSchema = [*config['LOGGER']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
+                *config['LOGGER']['LOG_SCHEMA'].replace(' ', '').split(',') ]
     msg = 'test msg'
-    ack = logger.send_log(message=msg, logSchema=logSchema)
+    ack = logger.send_log(message=msg, logSchema=logSchema, test=True)
     resp = ack.get('resp', 400)
     msg = ack.get('msg', None)
     assert resp == 200, 'message not sent'
