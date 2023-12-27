@@ -8,6 +8,7 @@ import pytest
 import sys
 sys.path.append('../DDOILoggerClient')
 from DDOILogger import DDOILogger
+import yaml
 
 
 subsystem='MOSFIRE'
@@ -21,9 +22,9 @@ rs = 'test log'
 url = "tcp://localhost:5570"
 config_parser = configparser.ConfigParser()
 
-config_loc = os.path.join(os.getcwd(), 'logger_cfg.ini')
-config_parser.read(config_loc)
-config = dict(config_parser)
+config_loc = os.path.join(os.getcwd(), 'logger_cfg.yaml')
+with open(config_loc, 'r') as f:
+    config = yaml.safe_load(f)
 
 @pytest.mark.client
 def test_logger_client():
@@ -32,8 +33,8 @@ def test_logger_client():
     alive = logger.server_interface._check_cfg_url_alive()
     assert alive, 'heartbeat failing'
 
-    logSchema = [*config['LOGGER']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
-                *config['LOGGER']['LOG_SCHEMA'].replace(' ', '').split(',') ]
+    logSchema = [*config[loggername]['LOG_SCHEMA_BASE'],
+                *config[loggername]['LOG_SCHEMA'] ]
     msg = 'test msg'
     ack = logger.send_log(message=msg, logSchema=logSchema, test=True)
     resp = ack.get('resp', 400)
@@ -51,7 +52,7 @@ def test_request_logs():
     poll.register(socket, zmq.POLLIN)
 
     nLogs = 10
-    reqParams = {'nLogs': nLogs }
+    reqParams = {'nLogs': nLogs, 'loggername': loggername }
     msg = {'msg_type': 'request_logs', 'body': reqParams}
     socket.send_string(json.dumps(msg)) #  zeromq method is faster
 

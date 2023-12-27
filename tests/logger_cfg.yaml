@@ -1,0 +1,56 @@
+ZMQ_LOGGING_SERVER:
+    url: tcp://XX.XX.XX.XX:5570 
+LOCAL_ZMQ_LOGGING_SERVER:
+    url: tcp://localhost:5570
+ARG_REQUIRED_KEYS:
+    - endDate
+    - minutes
+    - dateFormat
+ARG_KEYS:
+    - subsystem
+    - startDate
+    - nLogs
+    - loggername
+ARG_HELP:
+    subsystem: subsystem specific logs
+    startdate: starting date to retrieve logs
+    enddate: ending date to retrieve logs
+    minutes: set to retrieve last n minutes of logs
+    dateFormat: how the dates are formatted (default is YYYY-mm-ddTHH:MM:SS)
+    nLogs: maximum number of logs to output 
+    loggername: name of the logger to use (DEFAULT IS DDOI)
+ARG_DEFAULTS:
+    dateFormat: "%Y-%m-%dT%H:%M:%S"
+    nLogs: 100 
+    loggername: DDOI
+ARG_TYPES:
+    subsystem: str
+    startDate: str
+    endDate: str
+    minutes: int
+    dateFormat: str
+    nLogs: int 
+    loggername: str
+DDOI: 
+    LOG_SCHEMA_BASE:
+        - message
+        - level
+        - utc_sent
+        - utc_recieved
+        - hostname
+        - loggername 
+    LOG_SCHEMA: 
+        - subsystem
+        - author
+        - semid
+        - progid
+KOA: 
+    LOG_SCHEMA_BASE:
+        - message
+        - level
+        - utc_sent
+        - utc_recieved
+        - hostname
+        - loggername 
+    LOG_SCHEMA: 
+        - subsystem

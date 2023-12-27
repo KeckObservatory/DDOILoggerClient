@@ -1,8 +1,8 @@
 import pdb
+import yaml
 import os
 import json
 from pymongo import MongoClient
-import configparser
 import zmq
 import sys
 from datetime import datetime
@@ -21,7 +21,8 @@ def get_mongodb(db_name):
 
 def create_logger(config, subsystem, author, progid, semid, fileName, loggername):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    zmq_log_handler = ZMQHandler(config, **{'subsystem':subsystem, 
+    local=True
+    zmq_log_handler = ZMQHandler(config, local=local, **{'subsystem':subsystem, 
                                             'author':author, 
                                             'progid':progid, 
                                             'semid':semid, 
@@ -37,16 +38,14 @@ def create_logger(config, subsystem, author, progid, semid, fileName, loggername
     logger.addHandler(fl)
     return logger
 
-def init_logger():
+def init_logger(loggername):
     subsystem='MOSFIRE'
-    config_parser = configparser.ConfigParser()
-    config_loc = os.path.join(os.getcwd(), 'logger_cfg.ini')
-    config_parser.read(config_loc)
-    config = dict(config_parser)
+    config_loc = os.path.join(os.getcwd(), 'logger_cfg.yaml')
+    with open(config_loc, 'r') as f:
+        config = yaml.safe_load(f)
     author="ttucker"
     progid="2022B"
     semid="1234"
-    loggername = 'DDOI'
     fileName = "stress_test.log"
     logger = create_logger(config, subsystem, author, progid, semid, fileName, loggername)
     return logger
@@ -63,7 +62,8 @@ def init_zmq(url):
 if __name__=='__main__':
     db = get_mongodb('logs')
     url="tcp://localhost:5570"
-    logger = init_logger()
+    loggername = 'ddoi'
+    logger = init_logger(loggername)
     # url="tcp://10.95.1.94:5570"
     socket, poll = init_zmq(url)
     counter = 0
@@ -74,7 +74,7 @@ if __name__=='__main__':
         sleep(.1)
 
         # request message with zeromq
-        reqParams = {'nLogs': 1}
+        reqParams = {'nLogs': 1, 'loggername': loggername}
         request = {'msg_type': 'request_logs', 'body': reqParams}
         socket.send_string(json.dumps(request)) #  zeromq method is faster
         sockets = dict(poll.poll(5000))
