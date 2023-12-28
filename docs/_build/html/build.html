@@ -148,7 +148,7 @@ shown below. Using the dsibld account create the file below.</p>
 <span class="go">WantedBy=multi-user.target</span>
 </pre></div>
 </div>
-<p>Note that both servers depend on using the ./configs/server_cfg.ini file and contains the ports and URLs
+<p>Note that both servers depend on using the ./configs/server_cfg.yaml file and contains the ports and URLs
 required to run the servers.</p>
 <a class="reference internal image-reference" href="_images/server_cfg.png"><img alt="Alternative text" src="_images/server_cfg.png" style="width: 300px;" /></a>
 <p>The parameter <code class="docutils literal notranslate"><span class="pre">nworkers</span></code> represent the number of workers used.
@@ -293,7 +293,7 @@ off of its contents. I.E. If msg_type is heartbeat then a heartbeat response is 
 If it is request_metadata_options then the server sends log level and subsystem arrays as a response.
 If it is log the server adds the log to the database and sends back an acknowledgment message,
 detailing if it was successful or not.</p>
-<p>The server depends on the configuration file located at ./configs/server_cfg.ini.
+<p>The server depends on the configuration file located at ./configs/server_cfg.yaml.
 Messages sent to the server are sent as serialized JSON objects with the following schema:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="s2">&quot;msg_type&quot;</span><span class="p">:</span> <span class="n">enumerable</span> <span class="s2">&quot;log&quot;</span> <span class="ow">or</span> <span class="s2">&quot;heartbeat&quot;</span> <span class="ow">or</span> <span class="s2">&quot;request_metadata_options&quot;</span><span class="p">,</span>

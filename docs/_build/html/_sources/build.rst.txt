@@ -117,7 +117,7 @@ Run the HTTP server by running the http_logger.service file shown below. Run it 
     WantedBy=multi-user.target
 
 
-Note that both servers depend on using the ./configs/server_cfg.ini file and contains the ports and URLs
+Note that both servers depend on using the ./configs/server_cfg.yaml file and contains the ports and URLs
 required to run the servers.
 
 
@@ -325,7 +325,7 @@ If it is request_metadata_options then the server sends log level and subsystem 
 If it is log the server adds the log to the database and sends back an acknowledgment message, 
 detailing if it was successful or not.
 
-The server depends on the configuration file located at ./configs/server_cfg.ini. 
+The server depends on the configuration file located at ./configs/server_cfg.yaml. 
 Messages sent to the server are sent as serialized JSON objects with the following schema:
 
 .. code-block::  python 

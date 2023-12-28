@@ -21,7 +21,7 @@ sends back a acknowledgment message, detailing if it was successful
 or not. 
 
 The server depends on the configuration file located at 
-``./configs/server_cfg.ini``.
+``./configs/server_cfg.yaml``.
 Messages sent to the server are sent as serialized 
 JSON objects with the following schema:
 
