@@ -1,10 +1,11 @@
 from datetime import datetime
 import os
-import configparser
 import json
 import zmq
+import yaml
 import pdb
 from logging import StreamHandler
+
 
 class ZMQHandler(StreamHandler):
     """
@@ -19,18 +20,19 @@ class ZMQHandler(StreamHandler):
 
         if config is None:
             configLoc = self._get_default_config_loc()
-            config = configparser.ConfigParser()
-            config.read(configLoc)
-            config = dict(config)
+            with open(configLoc, 'r') as f:
+                config = yaml.safe_load(f)
+        
 
-        self.logSchema = [*config['LOGGER']['LOG_SCHEMA_BASE'].replace(' ', '').split(','),
-                    *config['LOGGER']['LOG_SCHEMA'].replace(' ', '').split(',') ]
-        url = config['ZMQ_LOGGING_SERVER']['URL'] if not local else config['LOCAL_ZMQ_LOGGING_SERVER']['URL'] 
+        self.logSchema = [*config[kwargs.get('loggername').upper()]['LOG_SCHEMA_BASE'],
+                    *config[kwargs.get('loggername').upper()]['LOG_SCHEMA']]
+        url = config['ZMQ_LOGGING_SERVER']['url'] if not local else config['LOCAL_ZMQ_LOGGING_SERVER']['url'] 
         self.zmq_client_logger = DDOILogger(url, config, **kwargs)
     
-    def _get_default_config_loc(self):
+    @staticmethod
+    def _get_default_config_loc():
         config_loc = os.path.abspath(os.path.dirname(__file__))
-        config_loc = os.path.join(config_loc, './logger_cfg.ini')
+        config_loc = os.path.join(config_loc, './logger_cfg.yaml')
         return config_loc
 
     def emit(self, record):
@@ -73,11 +75,6 @@ class DDOILogger():
             log['loggername'] = loggername.lower()
         resp = self.server_interface._send_log(log, sendAck)
         return json.loads(resp)
-    
-    def _get_default_config_loc(self):
-        config_loc = os.path.abspath(os.path.dirname(__file__))
-        config_loc = os.path.join(config_loc, './logger_cfg.ini')
-        return config_loc
     
 class ServerInterface():
     """ZeroMQ client that interfaces with the server
@@ -132,6 +129,7 @@ class ServerInterface():
             dict: an acknowledgment message from the server
         """
         msg = {'msg_type': 'log', 'body': body}
+
         self.socket.send_string(json.dumps(msg))
         if sendAck:
             sockets = dict(self.poll.poll(1000))
