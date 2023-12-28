@@ -22,6 +22,8 @@ def get_last_n_minutes_logs(minutes, **kwargs):
 
 def print_ouput_json_table(logs):
     excl = [ 'utc_sent' ]
+    if isinstance(logs, str):
+        print(logs)
     keys = ([x for x in logs[0].keys() if x not in excl])
     print('\t '.join(keys))
     for log in logs:
