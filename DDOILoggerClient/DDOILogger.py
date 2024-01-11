@@ -136,5 +136,4 @@ class ServerInterface():
             if self.socket in sockets:
                 resp = self.socket.recv()
                 return resp
-        else:
-            return b"{}"
+        return b"{}"
