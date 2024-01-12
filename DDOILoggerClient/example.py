@@ -1,5 +1,5 @@
 #from DDOILogger import ZMQHandler
-from DDOILoggerClient import DDOILogger as dl
+from LoggerClient import Logger as dl
 import os
 import logging
 from logging import StreamHandler, FileHandler

@@ -27,7 +27,7 @@ class ZMQHandler(StreamHandler):
         self.logSchema = [*config[kwargs.get('loggername').upper()]['LOG_SCHEMA_BASE'],
                     *config[kwargs.get('loggername').upper()]['LOG_SCHEMA']]
         url = config['ZMQ_LOGGING_SERVER']['url'] if not local else config['LOCAL_ZMQ_LOGGING_SERVER']['url'] 
-        self.zmq_client_logger = DDOILogger(url, config, **kwargs)
+        self.zmq_client_logger = Logger(url, config, **kwargs)
     
     @staticmethod
     def _get_default_config_loc():
@@ -40,7 +40,7 @@ class ZMQHandler(StreamHandler):
 
 """Instantiable class for logging within the DDOI ecosystem
 """
-class DDOILogger():
+class Logger():
     """Module that is used to log DDOI messages.
     
     """
