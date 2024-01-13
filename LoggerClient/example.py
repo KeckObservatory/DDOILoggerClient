@@ -1,14 +1,11 @@
-#from DDOILogger import ZMQHandler
 from LoggerClient import Logger as dl
-import os
 import logging
 from logging import StreamHandler, FileHandler
-import pdb
 
 def create_logger(subsystem, configLoc, author, progid, semid, fileName, loggername):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     kwargs = {'subsystem':subsystem, 'author':author, 'progid':progid, 'semid':semid, 'loggername': loggername}
-    zmq_log_handler = dl.ZMQHandler(configLoc, local=True, **kwargs)
+    zmq_log_handler = dl.ZMQHandler(configLoc, local=False, **kwargs)
     ch = StreamHandler()
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
