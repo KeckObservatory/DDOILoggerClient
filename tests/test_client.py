@@ -7,7 +7,7 @@ import os
 import pytest
 import sys
 sys.path.append('../LoggerClient')
-from DDOILogger import DDOILogger
+from Logger import Logger
 import yaml
 
 
@@ -29,7 +29,7 @@ with open(config_loc, 'r') as f:
 @pytest.mark.client
 def test_logger_client():
 
-    logger = DDOILogger(url, subsystem=subsystem, author=author, progid=progid, semid=semid, loggername=loggername)
+    logger = Logger(url, subsystem=subsystem, author=author, progid=progid, semid=semid, loggername=loggername)
     alive = logger.server_interface._check_cfg_url_alive()
     assert alive, 'heartbeat failing'
 

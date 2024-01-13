@@ -4,10 +4,10 @@ LoggerClient package
 Submodules
 ----------
 
-LoggerClient.DDOILogger module
+LoggerClient.Logger module
 ----------------------------------
 
-.. automodule:: LoggerClient.DDOILogger
+.. automodule:: LoggerClient.Logger
    :members:
    :undoc-members:
    :show-inheritance:

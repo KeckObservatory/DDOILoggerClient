@@ -93,7 +93,7 @@ Simply running the command python zmq_server.py starts the server. To run it as 
     [Service]
     Type=simple
     Restart=always
-    ExecStart=/usr/local/anaconda/bin/python3 /ddoi/DDOILoggerServer/default/zmq_server.py
+    ExecStart=/usr/local/anaconda/bin/python3 /ddoi/LoggerServer/default/zmq_server.py
     [Install]
     WantedBy=multi-user.target
 
@@ -111,7 +111,7 @@ Run the HTTP server by running the http_logger.service file shown below. Run it 
     [Service]
     Type=simple
     Restart=always
-    ExecStart=/usr/local/anaconda/bin/python3 /ddoi/DDOILoggerServer/default/http_server.py
+    ExecStart=/usr/local/anaconda/bin/python3 /ddoi/LoggerServer/default/http_server.py
 
     [Install]
     WantedBy=multi-user.target
@@ -234,7 +234,7 @@ The following example script is used to sets up a logger that:
 
 .. code-block::  python 
 
-    from LoggerClient import DDOILogger as dl
+    from LoggerClient import Logger as dl
     import os
     import logging
     from logging import StreamHandler, FileHandler
