@@ -1,4 +1,4 @@
-DDOILoggerClient
+LoggerClient
 ================
 
 .. toctree::

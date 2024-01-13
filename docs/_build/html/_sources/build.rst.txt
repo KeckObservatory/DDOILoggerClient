@@ -234,7 +234,7 @@ The following example script is used to sets up a logger that:
 
 .. code-block::  python 
 
-    from DDOILoggerClient import DDOILogger as dl
+    from LoggerClient import DDOILogger as dl
     import os
     import logging
     from logging import StreamHandler, FileHandler

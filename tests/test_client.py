@@ -6,7 +6,7 @@ import sys
 import os
 import pytest
 import sys
-sys.path.append('../DDOILoggerClient')
+sys.path.append('../LoggerClient')
 from DDOILogger import DDOILogger
 import yaml
 

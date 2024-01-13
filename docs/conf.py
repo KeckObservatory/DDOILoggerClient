@@ -12,12 +12,12 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../DDOILoggerClient'))
+sys.path.insert(0, os.path.abspath('../LoggerClient'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'DDOILoggerClient'
+project = 'LoggerClient'
 copyright = '2022, Tyler Tucker'
 author = 'Tyler Tucker'
 

@@ -11,7 +11,7 @@ from logging import StreamHandler, FileHandler
 from time import sleep
 from multiprocessing import Process
 from numpy.random import poisson
-from DDOILoggerClient import DDOILogger as dl 
+from LoggerClient import Logger as dl 
 
 def create_logger(subsystem, configLoc, author, progid, semid, fileName):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

@@ -10,9 +10,9 @@ import logging
 from logging import StreamHandler, FileHandler
 from time import sleep
 
-sys.path.append('../DDOILoggerClient')
+sys.path.append('../LoggerClient')
 from DDOILogger import ZMQHandler
-# from DDOILoggerClient import DDOILogger as dl 
+# from LoggerClient import DDOILogger as dl 
 
 
 def get_mongodb(db_name):
