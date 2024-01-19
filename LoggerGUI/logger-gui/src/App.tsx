@@ -9,7 +9,6 @@ import { LogView } from './log_view'
 function App() {
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const theme = handleTheme(darkState)
-  console.log('theme', theme)
 
   const handleThemeChange = (): void => {
     setDarkState(!darkState);

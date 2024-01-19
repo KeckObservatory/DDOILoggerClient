@@ -12,9 +12,6 @@ export const mock_get_logs = (
    return mockPromise
 }
 
-const LOGGER_BASE_URL = 'http://vm-appserver.keck.hawaii.edu/api/log/get_logs?'
-const IS_BUILD= process.env.NODE_ENV === 'production'
-
 const axiosInstance = axios.create({
     withCredentials: true,
     headers: {
@@ -32,7 +29,7 @@ export const get_logs = (
     subsystem?: string,
     semid?: string,
 ): Promise<Log[]> => {
-    let url = LOGGER_BASE_URL
+    let url = import.meta.env.VITE_LOGGER_BASE_URL
     if (minutes) {
         url += `minutes=${n_logs}`
     }
@@ -48,5 +45,5 @@ export const get_logs = (
 }
 
 export const log_functions = {
-    get_logs: IS_BUILD ? get_logs: mock_get_logs
+    get_logs: import.meta.env.PROD ? get_logs: mock_get_logs
 }

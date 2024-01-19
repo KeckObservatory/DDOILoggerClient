@@ -24,21 +24,25 @@ export const Control = (props: Props) => {
         query_logs()
     }, [])
 
-    const query_logs = () => {
+    const query_logs = async () => {
         const ln = loggername === 'ddoi' || loggername === 'koa' ? loggername : 'ddoi'
+        let logs: Log[] = []
         if (!minuteSwitch) {
-            log_functions.get_logs(n_logs, ln).then((lgs: (Log | undefined)[]) => {
-                if (lgs) {
-                    props.setLogs(lgs as Log[])
-                }
-            })
+            logs = await log_functions.get_logs(n_logs, ln)
         }
         else {
-            log_functions.get_logs(n_logs, ln, minutes).then((lgs: (Log | undefined)[]) => {
-                if (lgs) {
-                    props.setLogs(lgs as Log[])
-                }
+            logs = await log_functions.get_logs(n_logs, ln, minutes)
+        }
+        if (logs) {
+            //format logs
+            logs = logs.map((log: any) => {
+                const _id = log._id
+                log._id = _id.$oid
+                const utc_received = log.utc_received.$date
+                log.utc_received = utc_received
+                return log as Log
             })
+            props.setLogs(logs)
         }
     }
 

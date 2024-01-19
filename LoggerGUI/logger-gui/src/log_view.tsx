@@ -9,13 +9,16 @@ export interface Props {
 }
 
 export interface Log {
+    "_id"?: string | { "$oid": string },
+    "loggername": string,
 	"utc_sent": string,
+    "utc_received": string | { "$date": string },
 	"hostname": string,
 	"level": string,
 	"subsystem": string,
 	"author": null | string,
-	"SEMID": null | string,
-	"PROGID": null | string,
+	"semid": null | string,
+	"progid": null | string,
 	"message": string 
 }
 
@@ -78,8 +81,8 @@ export const LogView = () => {
         { name: 'level', label: 'Level', options: { display: false } },
         { name: 'subsystem', label: 'Subsystem' },
         { name: 'author', label: 'Author', options: { display: false } },
-        { name: 'SEMID', label: 'Semid' },
-        { name: 'PROGID', label: 'ProgID', options: { display: false } },
+        { name: 'semid', label: 'Semid' },
+        { name: 'progid', label: 'ProgID', options: { display: false } },
         { name: 'message', label: 'Message', 
           options: { 
             filter: false,
