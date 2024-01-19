@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
 import { Control } from './control'
 import { styled } from '@mui/material/styles'
@@ -45,7 +45,7 @@ const DataTableContainer = styled('div')(() => ({
 }));
 
 
-export const LogView = (props: Props) => {
+export const LogView = () => {
 
     const [logs, setLogs] = useState([] as Log[])
 
@@ -58,7 +58,7 @@ export const LogView = (props: Props) => {
         selectableRowsHideCheckboxes: false,
         selectableRows: 'none',
         rowsPerPage: 25,
-        setRowProps: (row, dataIndex, rowIndex) => {
+        setRowProps: () => {
             return {
                 style: { padding: '0px' },
             };
@@ -84,7 +84,7 @@ export const LogView = (props: Props) => {
           options: { 
             filter: false,
             display: true,
-            customBodyRender: (value: string, tableMeta: any, updateValue: any) => {
+            customBodyRender: (value: string) => {
                 return (value.split('\n').map((str: string) => {return <div style={{padding: "0px"}}>{str}</div>}))
             }
          } },

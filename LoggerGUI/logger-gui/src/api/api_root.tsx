@@ -5,11 +5,6 @@ import { default as mock_logs } from './mock_logs.json'
 import { Log } from '../log_view'
 
 export const mock_get_logs = (
-   n_logs: number, 
-   loggername: string,
-   minutes?: number,
-   subsystem?: string,
-   semid?: string, 
    ) => {
    const mockPromise = new Promise<Log[]>((resolve) => {
       resolve(mock_logs as Log[])
