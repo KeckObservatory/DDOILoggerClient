@@ -29,7 +29,8 @@ export interface GetLogsArgs {
     subsystem?: string,
     semid?: string,
     startdatetime?: string,
-    enddatetime?: string
+    enddatetime?: string,
+    dateformat?: string
 }
 
 export const get_logs = (
@@ -41,7 +42,8 @@ export const get_logs = (
     url += args.subsystem ? `&subystem=${args.subsystem}` : ""
     url += args.semid ? `&semid=${args.semid}` : ""
     url += args.startdatetime ? `&start_date=${args.startdatetime}` : ""
-    url += args.enddatetime ? `&end_date=${args.startdatetime}` : ""
+    url += args.enddatetime ? `&end_date=${args.enddatetime}` : ""
+    url += args.dateformat ? `&date_format=${args.dateformat}` : "&date_format=%Y-%m-%dT%H:%M:%S"
     return axiosInstance.get(url)
         .then(handleResponse)
         .catch(handleError)

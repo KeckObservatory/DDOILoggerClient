@@ -38,11 +38,13 @@ export const Control = (props: Props) => {
         const ln = loggername === 'ddoi' || loggername === 'koa' ? loggername : 'ddoi'
         let logs: Log[] = []
         let params: GetLogsArgs = {n_logs: n_logs, loggername: ln}
-        params['minutes'] = minutes ? minutes : undefined
+        params['minutes'] = minuteSwitch ? minutes : undefined
         params['startdatetime'] = startdatetime ? startdatetime : undefined
         params['enddatetime'] = enddatetime ? enddatetime : undefined
         logs = await log_functions.get_logs(params)
-        if (logs) {
+        const isString = typeof logs === 'string'
+        console.log('logs', logs)
+        if (!isString) {
             //format logs
             logs = logs.map((log: any) => {
                 const _id = log._id
@@ -52,6 +54,9 @@ export const Control = (props: Props) => {
                 return log as Log
             })
             props.setLogs(logs)
+        }
+        else {
+            props.setLogs([])
         }
     }
 
