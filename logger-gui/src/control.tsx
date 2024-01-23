@@ -36,8 +36,8 @@ export const Control = (props: Props) => {
         let logs: Log[] = []
         let params: GetLogsArgs = { n_logs: n_logs, loggername: ln }
         params['minutes'] = minutes > 0 ? minutes : undefined
-        params['startdatetime'] = startdatetime?.toLowerCase().includes('invalid') ? undefined : startdatetime 
-        params['enddatetime'] = enddatetime?.toLowerCase().includes('invalid')? undefined : enddatetime 
+        params['startdatetime'] = dayjs(startdatetime).isValid() ? startdatetime : undefined
+        params['enddatetime'] = dayjs(enddatetime).isValid() ? enddatetime : undefined
         logs = await log_functions.get_logs(params)
         const isString = typeof logs === 'string'
         console.log('logs', logs)
