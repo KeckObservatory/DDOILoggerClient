@@ -23,7 +23,6 @@ export const Control = (props: Props) => {
 
     const [n_logs, setNLogs] = useQueryParam('n_logs', withDefault(NumberParam, 100))
     const [minutes, setMinutes] = useQueryParam('log_minutes', withDefault(NumberParam, 10))
-    const [minuteSwitch, setMinuteSwitch] = useQueryParam('minute_switch', withDefault(BooleanParam, false))
     const [dateSwitch, setDateSwitchChange] = useQueryParam('date_switch', withDefault(BooleanParam, false))
     const [loggername, setLoggername] = useQueryParam('loggername', withDefault(StringParam, 'ddoi'))
     const [startdatetime, setStartdatetime] = useQueryParam<string | undefined>('startdatetime')
@@ -35,7 +34,7 @@ export const Control = (props: Props) => {
 
     useEffect(() => {
         console.log('startdatetime', startdatetime, 'enddatetime', enddatetime)
-    }, [startdatetime, enddatetime, n_logs, minutes, minuteSwitch, loggername])
+    }, [startdatetime, enddatetime, n_logs, minutes, loggername])
 
     const query_logs = async () => {
         const ln = loggername === 'ddoi' || loggername === 'koa' ? loggername : 'ddoi'
