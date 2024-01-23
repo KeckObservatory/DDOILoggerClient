@@ -6,6 +6,10 @@ import React, { useEffect } from 'react'
 import { log_functions } from './api/api_root'
 import { Log } from './log_view'
 import { BooleanParam, NumberParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 
 interface Props {
     setLogs: Function
@@ -19,6 +23,12 @@ export const Control = (props: Props) => {
     const [minutes, setMinutes] = useQueryParam('log_minutes', withDefault(NumberParam, 10))
     const [minuteSwitch, setMinuteSwitch] = useQueryParam('minute_switch', withDefault(BooleanParam, false))
     const [loggername, setLoggername] = useQueryParam('loggername', withDefault(StringParam, 'ddoi'))
+    // const [startdatetime, setStartdatetime] = useQueryParam('startdate', 
+    // withDefault(StringParam, dayjs().format('YYYY-MM-DDTHH:mm:ss')))
+    // const [enddatetime, setEnddatetime] = useQueryParam('enddate', 
+    // withDefault(StringParam, dayjs().format('YYYY-MM-DDTHH:mm:ss')))
+    const [startdatetime, setStartdatetime] = useQueryParam('startdate')
+    const [enddatetime, setEnddatetime] = useQueryParam('enddate')
 
     useEffect(() => {
         query_logs()
@@ -28,7 +38,7 @@ export const Control = (props: Props) => {
         const ln = loggername === 'ddoi' || loggername === 'koa' ? loggername : 'ddoi'
         let logs: Log[] = []
         if (!minuteSwitch) {
-            logs = await log_functions.get_logs(n_logs, ln)
+            logs = await log_functions.get_logs(n_logs, ln, startdatetime=startdatetime, enddatetime=enddatetime)
         }
         else {
             logs = await log_functions.get_logs(n_logs, ln, minutes)
@@ -75,6 +85,12 @@ export const Control = (props: Props) => {
         setMinutes(value)
     }
 
+    const dt_changed = (value: dayjs.Dayjs | null, type: string) => {
+        console.log('type', type, 'value', value)
+        type.includes('start') && setStartdatetime(value?.format('YYYY-MM-DDTHH:mm:ss'))
+        type.includes('end') && setEnddatetime(value?.format('YYYY-MM-DDTHH:mm:ss'))
+    }
+
 
     return (
         <Stack sx={{ marginBottom: '4px'}} direction="row" spacing={2}>
@@ -101,6 +117,18 @@ export const Control = (props: Props) => {
                 onChange={on_loggername_change}
                 value={loggername}
             />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker 
+                label='start time'
+                onChange={(value: dayjs.Dayjs | null) => dt_changed(value, 'startdatetime')} 
+                value={startdatetime ? dayjs(startdatetime as string): undefined} 
+                views={['year', 'day', 'hours', 'minutes', 'seconds']} />
+                <DateTimePicker 
+                label='end time'
+                onChange={(value: dayjs.Dayjs | null) => dt_changed(value, 'enddatetime')} 
+                value={enddatetime ? dayjs(enddatetime as string) : undefined} 
+                views={['year', 'day', 'hours', 'minutes', 'seconds']} />
+                </LocalizationProvider>
             <Button variant={'contained'}
                 onClick={on_query_logs}
             >Query Logs</Button>

@@ -22,27 +22,31 @@ const axiosInstance = axios.create({
 })
 axiosInstance.interceptors.response.use(intResponse, intError);
 
-export const get_logs = (
+export interface GetLogsArgs {
     n_logs: number,
     loggername: string,
     minutes?: number,
     subsystem?: string,
     semid?: string,
+    startdatetime?: string,
+    enddatetime?: string
+}
+
+export const get_logs = (
+    args: GetLogsArgs
 ): Promise<Log[]> => {
     let url = import.meta.env.VITE_LOGGER_BASE_URL
-    if (minutes) {
-        url += `minutes=${n_logs}`
-    }
-    else {
-        url += n_logs ? `n_logs=${n_logs}` : ""
-    }
-    url += loggername ? `&loggername=${loggername}` : ""
-    url += subsystem ? `&subystem=${subsystem}` : ""
-    url += semid ? `&semid=${semid}` : ""
+    url += args.minutes ? `minutes=${args.minutes}` : `n_logs=${args.n_logs}`
+    url += args.loggername ? `&loggername=${args.loggername}` : ""
+    url += args.subsystem ? `&subystem=${args.subsystem}` : ""
+    url += args.semid ? `&semid=${args.semid}` : ""
+    url += args.startdatetime ? `&start_date=${args.startdatetime}` : ""
+    url += args.enddatetime ? `&end_date=${args.startdatetime}` : ""
     return axiosInstance.get(url)
         .then(handleResponse)
         .catch(handleError)
 }
+
 
 export const log_functions = {
     get_logs: import.meta.env.PROD ? get_logs: mock_get_logs
