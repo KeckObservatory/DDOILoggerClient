@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
 import React, { useEffect } from 'react'
-import { log_functions } from './api/api_root'
+import { GetLogsArgs, log_functions } from './api/api_root'
 import { Log } from './log_view'
 import { BooleanParam, NumberParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
 import { LocalizationProvider } from '@mui/x-date-pickers'
@@ -27,8 +27,8 @@ export const Control = (props: Props) => {
     // withDefault(StringParam, dayjs().format('YYYY-MM-DDTHH:mm:ss')))
     // const [enddatetime, setEnddatetime] = useQueryParam('enddate', 
     // withDefault(StringParam, dayjs().format('YYYY-MM-DDTHH:mm:ss')))
-    const [startdatetime, setStartdatetime] = useQueryParam('startdate')
-    const [enddatetime, setEnddatetime] = useQueryParam('enddate')
+    const [startdatetime, setStartdatetime] = useQueryParam<string>('startdatetime')
+    const [enddatetime, setEnddatetime] = useQueryParam<string>('enddatetime')
 
     useEffect(() => {
         query_logs()
@@ -37,12 +37,11 @@ export const Control = (props: Props) => {
     const query_logs = async () => {
         const ln = loggername === 'ddoi' || loggername === 'koa' ? loggername : 'ddoi'
         let logs: Log[] = []
-        if (!minuteSwitch) {
-            logs = await log_functions.get_logs(n_logs, ln, startdatetime=startdatetime, enddatetime=enddatetime)
-        }
-        else {
-            logs = await log_functions.get_logs(n_logs, ln, minutes)
-        }
+        let params: GetLogsArgs = {n_logs: n_logs, loggername: ln}
+        params['minutes'] = minutes ? minutes : undefined
+        params['startdatetime'] = startdatetime ? startdatetime : undefined
+        params['enddatetime'] = enddatetime ? enddatetime : undefined
+        logs = await log_functions.get_logs(params)
         if (logs) {
             //format logs
             logs = logs.map((log: any) => {
@@ -85,7 +84,7 @@ export const Control = (props: Props) => {
         setMinutes(value)
     }
 
-    const dt_changed = (value: dayjs.Dayjs | null, type: string) => {
+    const dt_changed = (value: dayjs.Dayjs, type: string) => {
         console.log('type', type, 'value', value)
         type.includes('start') && setStartdatetime(value?.format('YYYY-MM-DDTHH:mm:ss'))
         type.includes('end') && setEnddatetime(value?.format('YYYY-MM-DDTHH:mm:ss'))
@@ -120,12 +119,12 @@ export const Control = (props: Props) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker 
                 label='start time'
-                onChange={(value: dayjs.Dayjs | null) => dt_changed(value, 'startdatetime')} 
+                onChange={(value: dayjs.Dayjs | null) => value && dt_changed(value, 'startdatetime')} 
                 value={startdatetime ? dayjs(startdatetime as string): undefined} 
                 views={['year', 'day', 'hours', 'minutes', 'seconds']} />
                 <DateTimePicker 
                 label='end time'
-                onChange={(value: dayjs.Dayjs | null) => dt_changed(value, 'enddatetime')} 
+                onChange={(value: dayjs.Dayjs | null) => value && dt_changed(value, 'enddatetime')} 
                 value={enddatetime ? dayjs(enddatetime as string) : undefined} 
                 views={['year', 'day', 'hours', 'minutes', 'seconds']} />
                 </LocalizationProvider>
