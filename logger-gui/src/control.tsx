@@ -15,6 +15,8 @@ interface Props {
     setLogs: Function
 }
 
+const FORMAT = 'YYYY-MM-DDTHH:mm:ss'
+
 export const Control = (props: Props) => {
 
     const [n_logs, setNLogs] = useQueryParam('n_logs', withDefault(NumberParam, 100))
@@ -32,8 +34,8 @@ export const Control = (props: Props) => {
         let logs: Log[] = []
         let params: GetLogsArgs = { n_logs: n_logs, loggername: ln }
         params['minutes'] = minutes > 0 ? minutes : undefined
-        params['startdatetime'] = dayjs(startdatetime, 'YYYY-MM-DDTHH:mm:ss', true).isValid() ? startdatetime : undefined
-        params['enddatetime'] = dayjs(enddatetime, 'YYYY-MM-DDTHH:mm:ss', true).isValid() ? enddatetime : undefined
+        params['startdatetime'] = dayjs(startdatetime, FORMAT, true).isValid() ? startdatetime : undefined
+        params['enddatetime'] = dayjs(enddatetime, FORMAT, true).isValid() ? enddatetime : undefined
         console.log('params', params)
         logs = await log_functions.get_logs(params)
         const isString = typeof logs === 'string'
@@ -78,10 +80,10 @@ export const Control = (props: Props) => {
         setMinutes(value)
     }
 
-    const dt_changed = (value: dayjs.Dayjs, type: string) => {
+    const dt_changed = (value: dayjs.Dayjs | null | undefined, type: string) => {
         console.log('type', type, 'value', value)
-        type.includes('start') && setStartdatetime(value?.format('YYYY-MM-DDTHH:mm:ss'))
-        type.includes('end') && setEnddatetime(value?.format('YYYY-MM-DDTHH:mm:ss'))
+        type.includes('start') && setStartdatetime(value?.format(FORMAT))
+        type.includes('end') && setEnddatetime(value?.format(FORMAT))
     }
 
 
@@ -117,7 +119,7 @@ export const Control = (props: Props) => {
                                 actions: ['clear'],
                             },
                         }}
-                        onChange={(value: dayjs.Dayjs | null) => value && dt_changed(value, 'startdatetime')}
+                        onChange={(value: dayjs.Dayjs | null) => dt_changed(value, 'startdatetime')}
                         value={startdatetime ? dayjs(startdatetime as string) : undefined}
                         views={['year', 'day', 'hours', 'minutes', 'seconds']} />
                     <DateTimePicker
@@ -127,7 +129,7 @@ export const Control = (props: Props) => {
                             },
                         }}
                         label='end time'
-                        onChange={(value: dayjs.Dayjs | null) => value && dt_changed(value, 'enddatetime')}
+                        onChange={(value: dayjs.Dayjs | null) => dt_changed(value, 'enddatetime')}
                         value={enddatetime ? dayjs(enddatetime as string) : undefined}
                         views={['year', 'day', 'hours', 'minutes', 'seconds']} />
                 </React.Fragment>
