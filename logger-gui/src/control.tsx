@@ -20,7 +20,7 @@ const FORMAT = 'YYYY-MM-DDTHH:mm:ss'
 export const Control = (props: Props) => {
 
     const [n_logs, setNLogs] = useQueryParam('n_logs', withDefault(NumberParam, 100))
-    const [minutes, setMinutes] = useQueryParam('log_minutes', withDefault(NumberParam, 10))
+    const [minutes, setMinutes] = useQueryParam('log_minutes', withDefault(NumberParam, 0))
     const [loggername, setLoggername] = useQueryParam('loggername', withDefault(StringParam, 'ddoi'))
     const [startdatetime, setStartdatetime] = useQueryParam<string | undefined>('startdatetime')
     const [enddatetime, setEnddatetime] = useQueryParam<string | undefined>('enddatetime')
@@ -89,7 +89,7 @@ export const Control = (props: Props) => {
 
     return (
         <Stack sx={{ marginBottom: '4px' }} direction="row" spacing={2}>
-            <Tooltip title="get logs from n minutes ago (or from start date if defined)">
+            <Tooltip title="get logs from n minutes ago (or from start date if defined). Set to 0 to disable">
                 <TextField
                     label="minutes"
                     onChange={on_minutes_change}
@@ -97,7 +97,7 @@ export const Control = (props: Props) => {
                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 />
             </Tooltip>
-            <Tooltip title="set limit to n logs">
+            <Tooltip title="set limit to n logs, Max limit set to 500">
                 <TextField
                     label="number of logs"
                     onChange={on_n_logs_change}
