@@ -1,19 +1,17 @@
 #! @PYTHON3@
-import pdb
 import argparse 
 import sys
 from getlogz_functions import get_logz, print_ouput_json_table
 import os
 import yaml
 
-def get_default_config_loc(dev=False):
-    if dev:
-        config_loc = os.path.abspath(os.path.dirname(__file__))
-    else:
-        # .sin substitution comes from Makefile
-        config_loc = '@CFGDIR@'
+def get_default_config_loc(dev=False, configname='logger_cfg.yaml'):
+    config_loc = os.path.abspath(os.path.join(os.path.dirname(__file__), configname))
+    kroot_config_loc = os.path.join('@CFGDIR@', configname)
 
-    config_loc = os.path.join(config_loc, 'logger_cfg.yaml')
+    if not dev and os.path.isfile(kroot_config_loc):
+        # .sin substitution comes from Makefile
+        config_loc = kroot_config_loc 
     return config_loc
 
 
@@ -24,11 +22,14 @@ def get_url(config_parser):
     return url 
 
 if __name__ == '__main__':
-    dev = not 'kroot' in os.path.abspath(os.path.dirname(__file__)).lower() # sets to true if not using KROOT
+    dev = '--dev' in sys.argv
+    parser = argparse.ArgumentParser(description="Get logs from logger database")
+    parser.add_argument("--dev", nargs='?', help="include adds config file in kroot")
+
     config_loc = get_default_config_loc(dev)
     with open(config_loc, 'r') as f:
         config = yaml.safe_load(f)
-    parser = argparse.ArgumentParser(description="Get logs from logger database")
+
 
     for key in [*config['ARG_REQUIRED_KEYS'], *config['ARG_KEYS']]:
         argType = config['ARG_TYPES'][key]
