@@ -27,17 +27,14 @@ export const Control = (props: Props) => {
         query_logs()
     }, [])
 
-    useEffect(() => {
-        console.log('startdatetime', startdatetime, 'enddatetime', enddatetime)
-    }, [startdatetime, enddatetime, n_logs, minutes, loggername])
-
     const query_logs = async () => {
         const ln = loggername === 'ddoi' || loggername === 'koa' ? loggername : 'ddoi'
         let logs: Log[] = []
         let params: GetLogsArgs = { n_logs: n_logs, loggername: ln }
         params['minutes'] = minutes > 0 ? minutes : undefined
-        params['startdatetime'] = dayjs(startdatetime).isValid() ? startdatetime : undefined
-        params['enddatetime'] = dayjs(enddatetime).isValid() ? enddatetime : undefined
+        params['startdatetime'] = dayjs(startdatetime, 'YYYY-MM-DDTHH:mm:ss', true).isValid() ? startdatetime : undefined
+        params['enddatetime'] = dayjs(enddatetime, 'YYYY-MM-DDTHH:mm:ss', true).isValid() ? enddatetime : undefined
+        console.log('params', params)
         logs = await log_functions.get_logs(params)
         const isString = typeof logs === 'string'
         console.log('logs', logs)
