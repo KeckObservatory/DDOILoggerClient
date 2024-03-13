@@ -46,6 +46,7 @@ DDOI:
         - author
         - semid
         - progid
+        - server
 KOA: 
     LOG_SCHEMA_BASE:
         - message
